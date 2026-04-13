@@ -1,5 +1,5 @@
 package model.shot;
 
-public class ArrowStrategy implements Strategy {
+public class ArrowStrategy implements ShotStrategy {
 
 }
