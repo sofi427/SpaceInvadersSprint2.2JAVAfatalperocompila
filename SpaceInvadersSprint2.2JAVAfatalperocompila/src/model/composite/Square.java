@@ -1,10 +1,10 @@
-package spaceinvaders.model.composite;
-
-import spaceinvaders.model.state.SquareState;
-import spaceinvaders.model.state.EmptyState;
+package model.composite;
 
 import java.util.Collections;
 import java.util.List;
+
+import model.state.EmptyState;
+import model.state.SquareState;
 
 /**
  * Square - Leaf in the Composite Pattern, also uses State Pattern.

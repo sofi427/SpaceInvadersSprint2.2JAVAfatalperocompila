@@ -1,8 +1,8 @@
 package model;
 
-import spaceinvaders.model.composite.Square;
-import spaceinvaders.model.composite.SquareComposite;
-import spaceinvaders.model.state.AlienState;
+import model.composite.Square;
+import model.composite.SquareComposite;
+import model.state.AlienState;
 
 /**
  * Alien - multi-pixel enemy using Composite + State patterns.

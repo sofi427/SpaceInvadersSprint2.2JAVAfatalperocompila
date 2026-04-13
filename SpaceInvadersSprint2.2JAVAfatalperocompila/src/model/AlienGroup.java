@@ -1,6 +1,6 @@
 package model;
 
-import spaceinvaders.model.composite.Square;
+import model.composite.Square;
 import model.player.AbstractPlayer;
 
 import java.util.ArrayList;

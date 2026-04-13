@@ -1,8 +1,7 @@
-package spaceinvaders.model;
+package model;
 
-import spaceinvaders.model.composite.Square;
-import spaceinvaders.model.composite.SquareComposite;
-import model.Board;
+import model.composite.Square;
+import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
 import java.util.List;

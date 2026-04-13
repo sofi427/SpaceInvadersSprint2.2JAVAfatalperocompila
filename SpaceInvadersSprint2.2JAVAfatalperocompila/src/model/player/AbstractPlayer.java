@@ -1,6 +1,6 @@
 package model.player;
 
-import spaceinvaders.model.composite.SquareComposite;
+import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
 import java.util.List;

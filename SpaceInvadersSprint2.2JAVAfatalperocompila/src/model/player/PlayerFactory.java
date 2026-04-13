@@ -1,9 +1,5 @@
 package model.player;
 
-import spaceinvaders.model.BluePlayer;
-import spaceinvaders.model.GreenPlayer;
-import spaceinvaders.model.RedPlayer;
-
 /**
  * PlayerFactory - Factory + Singleton.
  * Produces AbstractPlayer subclasses by type string.

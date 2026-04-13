@@ -1,4 +1,4 @@
-package spaceinvaders.model.state;
+package model.state;
 
 import java.awt.Color;
 

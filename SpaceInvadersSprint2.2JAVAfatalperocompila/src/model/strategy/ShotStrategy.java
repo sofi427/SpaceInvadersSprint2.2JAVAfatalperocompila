@@ -1,6 +1,6 @@
 package model.strategy;
 
-import spaceinvaders.model.composite.SquareComposite;
+import model.composite.SquareComposite;
 
 /**
  * ShotStrategy interface - Strategy Pattern.

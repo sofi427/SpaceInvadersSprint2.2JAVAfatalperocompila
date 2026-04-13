@@ -1,8 +1,8 @@
 package model.strategy;
 
-import spaceinvaders.model.composite.Square;
-import spaceinvaders.model.composite.SquareComposite;
-import spaceinvaders.model.state.ShotState;
+import model.composite.Square;
+import model.composite.SquareComposite;
+import model.state.ShotState;
 
 /**
  * Diamond shape:

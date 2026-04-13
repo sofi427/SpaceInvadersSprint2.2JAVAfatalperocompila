@@ -1,10 +1,9 @@
-package spaceinvaders.model;
+package model.player;
 
-import spaceinvaders.model.composite.Square;
-import spaceinvaders.model.composite.SquareComposite;
-import spaceinvaders.model.state.PlayerState;
-import model.player.AbstractPlayer;
-import model.strategy.DiamondStrategy;
+import model.composite.Square;
+import model.composite.SquareComposite;
+import model.state.PlayerState;
+import model.strategy.ArrowStrategy;
 import model.strategy.PixelStrategy;
 import model.strategy.ShotStrategy;
 
@@ -13,32 +12,36 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * BluePlayer - strategies: Pixel and Diamond
+ * GreenPlayer - strategies: Pixel and Arrow
+ * Shape (center at cx,cy):
+ *   .X.
+ *   XXX
+ *   .X.
+ *   XXX
  */
-public class BluePlayer extends AbstractPlayer {
+public class GreenPlayer extends AbstractPlayer {
 
-    public BluePlayer(int centerX, int centerY) {
+    public GreenPlayer(int centerX, int centerY) {
         super(centerX, centerY);
     }
 
     @Override
     protected SquareComposite buildShape(int cx, int cy) {
         SquareComposite c = new SquareComposite();
-        PlayerState s = new PlayerState(Color.CYAN);
+        PlayerState s = new PlayerState(Color.GREEN);
+        c.add(new Square(cx,     cy - 2, s));
         c.add(new Square(cx - 1, cy - 1, s));
         c.add(new Square(cx,     cy - 1, s));
         c.add(new Square(cx + 1, cy - 1, s));
         c.add(new Square(cx,     cy,     s));
-        c.add(new Square(cx - 2, cy + 1, s));
         c.add(new Square(cx - 1, cy + 1, s));
         c.add(new Square(cx,     cy + 1, s));
         c.add(new Square(cx + 1, cy + 1, s));
-        c.add(new Square(cx + 2, cy + 1, s));
         return c;
     }
 
     @Override
     protected List<ShotStrategy> buildStrategies() {
-        return Arrays.asList(new PixelStrategy(), new DiamondStrategy());
+        return Arrays.asList(new PixelStrategy(), new ArrowStrategy());
     }
 }

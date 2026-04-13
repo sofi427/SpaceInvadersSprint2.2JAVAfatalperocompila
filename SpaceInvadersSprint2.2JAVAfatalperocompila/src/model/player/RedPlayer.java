@@ -1,9 +1,8 @@
-package spaceinvaders.model;
+package model.player;
 
-import spaceinvaders.model.composite.Square;
-import spaceinvaders.model.composite.SquareComposite;
-import spaceinvaders.model.state.PlayerState;
-import model.player.AbstractPlayer;
+import model.composite.Square;
+import model.composite.SquareComposite;
+import model.state.PlayerState;
 import model.strategy.ArrowStrategy;
 import model.strategy.DiamondStrategy;
 import model.strategy.PixelStrategy;

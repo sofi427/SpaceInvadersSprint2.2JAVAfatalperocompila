@@ -1,4 +1,4 @@
-package spaceinvaders.model.composite;
+package model.composite;
 
 import java.util.List;
 
