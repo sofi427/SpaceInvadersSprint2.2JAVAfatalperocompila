@@ -193,7 +193,7 @@ public class GameScreen extends JFrame implements Observer {
     private void updateInfo() {
         if (Board.getMyBoard().getPlayer() != null) {
             var player = Board.getMyBoard().getPlayer();
-            String weapon   = player.getCurrentStrategy().getShotTypeName();
+            String weapon   = player.getCurrentStrategy().getName();
             String ammoInfo = "";
             if (weapon.equals("ARROW"))   ammoInfo = " | Flecha: "   + player.getAmmoFecha();
             if (weapon.equals("DIAMOND")) ammoInfo = " | Diamante: " + player.getAmmoRombo();

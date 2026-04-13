@@ -4,13 +4,6 @@ import model.composite.Square;
 import model.composite.SquareComposite;
 import model.state.ShotState;
 
-/**
- * Arrow shape (pointing up):
- *   .X.
- *   XXX
- *    X
- *    X
- */
 public class ArrowStrategy implements ShotStrategy {
 
     private int remaining = 30;
@@ -28,12 +21,25 @@ public class ArrowStrategy implements ShotStrategy {
         return composite;
     }
 
-    @Override public int    getMaxShots()       { return 30; }
-    @Override public String getName()            { return "Arrow"; }
-    @Override public int    getRemainingShots()  { return remaining; }
+    @Override 
+    public int getMaxShots(){ 
+    	return 30; 
+    }
+    
+    @Override 
+    public String getName(){
+    	return "Arrow"; 
+    }
+    
+    @Override 
+    public int getRemainingShots(){ 
+    	return remaining; 
+    }
 
     @Override
-    public void consumeShot() {
-        if (remaining > 0) remaining--;
+    public void consumeShot(){
+        if (remaining > 0) {
+        	remaining--;
+        }
     }
 }

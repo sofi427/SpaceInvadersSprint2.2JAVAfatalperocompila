@@ -12,9 +12,26 @@ public class PixelStrategy implements ShotStrategy {
         composite.add(new Square(originX, originY, new ShotState()));
         return composite;
     }
+    
+    @Override 
+    public int getMaxShots(){ 
+    	return -1; 
+    }	// porque tiene disparos ilimitados
+    
+    @Override 
+    public String getName(){
+    	return "Pixel"; 
+    }
+    
+    @Override 
+    public int getRemainingShots(){ 
+    	return -1; 
+    }	// disparos ilimitados
 
-    @Override public int    getMaxShots()       { return -1; }
-    @Override public String getName()            { return "Pixel"; }
-    @Override public int    getRemainingShots()  { return -1; }
-    @Override public void   consumeShot()        { /* unlimited */ }
+    @Override
+    public void consumeShot(){}		// no consume disparos
+    
+    
+    
+    
 }

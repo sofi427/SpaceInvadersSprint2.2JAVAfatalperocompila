@@ -155,7 +155,7 @@ public class Board extends Observable {
         int topY = player.getSquares().getSquares().stream()
                 .mapToInt(Square::getPosY).min().orElse(50) - 2;
 
-        Shot shot = new Shot(player.getCurrentStrategy(), cx, topY, this);
+        Shot shot = new Shot(player.getCurrentStrategy(), cx, topY);
         shots.add(shot);
         player.consumeAmmo();   // deduct ammo for arrow/diamond
         shot.startMoving();
