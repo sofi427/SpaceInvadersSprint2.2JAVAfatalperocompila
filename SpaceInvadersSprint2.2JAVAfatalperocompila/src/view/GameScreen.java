@@ -28,70 +28,43 @@ import javax.swing.SwingUtilities;
 public class GameScreen extends JFrame implements Observer {
 
     private static final long serialVersionUID = 1L;
-
-    private static final int MIN_PIX = 4;
-
-    private static final Color COLOR_EMPTY  = Color.BLACK;
-    private static final Color COLOR_PLAYER = Color.CYAN;
-    private static final Color COLOR_ALIEN  = Color.GREEN;
-    private static final Color COLOR_SHOT   = Color.YELLOW;
-
     private JPanel     contentPane;
     private JPanel     matrixPanel;
     private JLabel     statusLabel;
     private JLabel[][] pixelMatrix;
     private GameController gController;
 
-    private int pixSize = 8;
-
-    // ── Constructor ───────────────────────────────────────────────────────────
 
     public GameScreen() {
-        pixelMatrix = new JLabel[Board.WIDTH][Board.LENGTH];
-
+        pixelMatrix = new JLabel[60][100];
         setTitle("Space Invaders");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(true);
-
         contentPane = new JPanel(new BorderLayout());
         contentPane.setBackground(Color.BLACK);
         setContentPane(contentPane);
-
         contentPane.add(buildMatrixPanel(), BorderLayout.CENTER);
         contentPane.add(getStatusLabel(),   BorderLayout.SOUTH);
-
         gController = new GameController();
         addKeyListener(gController);
         addWindowListener(gController);
         setFocusable(true);
         requestFocusInWindow();
-
-        setSize(Board.LENGTH * pixSize, Board.WIDTH * pixSize + 30);
         setLocationRelativeTo(null);
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                recalcPixSize();
-            }
-        });
-
+       
+        //Aniadimos observer a gamescreen
         Board.getMyBoard().addObserver(this);
     }
 
-    // ── Paneles ───────────────────────────────────────────────────────────────
 
     private JPanel buildMatrixPanel() {
-        matrixPanel = new JPanel(new GridLayout(Board.WIDTH, Board.LENGTH, 0, 0));
+        matrixPanel = new JPanel(new GridLayout(60, 100, 0, 0));
         matrixPanel.setBackground(Color.BLACK);
-        updateMatrixPanelSize();
 
-        for (int row = 0; row < Board.WIDTH; row++) {
-            for (int col = 0; col < Board.LENGTH; col++) {
+        for (int row = 0; row < 60; row++) {
+            for (int col = 0; col < 100; col++) {
                 JLabel lbl = new JLabel();
                 lbl.setOpaque(true);
                 lbl.setBackground(Color.BLACK);
-                lbl.setPreferredSize(new Dimension(pixSize, pixSize));
                 pixelMatrix[row][col] = lbl;
                 matrixPanel.add(lbl);
             }
@@ -99,14 +72,11 @@ public class GameScreen extends JFrame implements Observer {
         return matrixPanel;
     }
 
-    private void updateMatrixPanelSize() {
-        matrixPanel.setPreferredSize(
-                new Dimension(Board.LENGTH * pixSize, Board.WIDTH * pixSize));
-    }
+    
 
     private JLabel getStatusLabel() {
         if (statusLabel == null) {
-            statusLabel = new JLabel("  Pulsa WASD para moverte  |  ESPACIO para disparar  |  M para cambiar arma");
+            statusLabel = new JLabel(" Pulsa WASD para moverte | ESPACIO para disparar | M para cambiar arma");
             statusLabel.setForeground(Color.GREEN);
             statusLabel.setBackground(Color.BLACK);
             statusLabel.setOpaque(true);
@@ -115,144 +85,93 @@ public class GameScreen extends JFrame implements Observer {
         return statusLabel;
     }
 
-    // ── Redimensionado ────────────────────────────────────────────────────────
+  
 
-    private void recalcPixSize() {
-        int availW = contentPane.getWidth();
-        int availH = contentPane.getHeight() - getStatusLabel().getHeight();
-        if (availW <= 0 || availH <= 0) return;
-
-        int byWidth  = availW / Board.LENGTH;
-        int byHeight = availH / Board.WIDTH;
-        int newPix   = Math.max(MIN_PIX, Math.min(byWidth, byHeight));
-
-        if (newPix == pixSize) return;
-        pixSize = newPix;
-
-        Dimension cellDim = new Dimension(pixSize, pixSize);
-        for (int row = 0; row < Board.WIDTH; row++) {
-            for (int col = 0; col < Board.LENGTH; col++) {
-                pixelMatrix[row][col].setPreferredSize(cellDim);
-            }
-        }
-        updateMatrixPanelSize();
-        matrixPanel.revalidate();
-        matrixPanel.repaint();
-    }
-
-    // ── Observer ──────────────────────────────────────────────────────────────
-
-    /**
-     * Recibe notificaciones del modelo:
-     *   String "WON"  → victoria
-     *   String "LOST" → derrota
-     *   int[][] → refresco visual normal
-     *
-     * "READY" lo gestiona StartScreen, aquí se ignora.
-     */
-    @Override
+    
+    //El update reacciona segun lo que le notifique board, si llega una string sera del juego ganado o perdido, aparecera el mensaje que corresponda.
+    //Si llega una matriz de enteros sera porque bosrd se ha terminado de actualizarse y la vista debe hacerlo tambien.
     public void update(Observable o, Object arg) {
         if (arg instanceof String) {
             String msg = (String) arg;
             if (msg.equals("WON")) {
-                showGameOverMessage("¡Has salvado a la humanidad!", Color.GREEN);
+                showGameOverMessage("�Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
             } else if (msg.equals("LOST")) {
-                showGameOverMessage("Has perdido. La invasión ha comenzado.", Color.RED);
+                showGameOverMessage("Has perdido. La invasi�n ha comenzado. Corre", Color.RED);
             }
-            // "READY" y cualquier otro String se ignoran aquí
             return;
         }
 
         if (arg instanceof int[][]) {
             int[][] matrix = (int[][]) arg;
-            SwingUtilities.invokeLater(() -> {
                 refreshMatrix(matrix);
                 updateInfo();
-            });
         }
     }
-
-    // ── Pintado ───────────────────────────────────────────────────────────────
-
+    
+    //Coger el color del player e inmediatamente debajo el metodo para repintar la matriz
+    private Color colorPlayer() {
+    	if (Board.getMyBoard().getPlayerType()=="Blue") { return Color.BLUE;}
+    	else if(Board.getMyBoard().getPlayerType()=="Red") { return Color.RED;}
+    	else return Color.green;
+    }
     private void refreshMatrix(int[][] matrix) {
-        for (int row = 0; row < Board.WIDTH; row++) {
-            for (int col = 0; col < Board.LENGTH; col++) {
-                pixelMatrix[row][col].setBackground(cellColor(matrix[row][col]));
+        for (int row = 0; row < 60; row++) {
+            for (int col = 0; col < 100; col++) {
+            	if (matrix[row][col]==1) {pixelMatrix[row][col].setBackground(colorPlayer());}
+            	else if (matrix[row][col]==2) {pixelMatrix[row][col].setBackground(Color.MAGENTA);}
+				else if (matrix[row][col]==3) {pixelMatrix[row][col].setBackground(Color.YELLOW);}
+				else {pixelMatrix[row][col].setBackground(Color.BLACK);}
             }
         }
     }
 
-    /** Traduce código numérico de celda a Color. Sin switch: if/else if. */
-    private Color cellColor(int code) {
-        if      (code == Board.CELL_PLAYER) return COLOR_PLAYER;
-        else if (code == Board.CELL_ALIEN)  return COLOR_ALIEN;
-        else if (code == Board.CELL_SHOT)   return COLOR_SHOT;
-        else                                return COLOR_EMPTY;
-    }
+    
+    //Actualizar info del tipo de municion seleccionada
+    /*private void updateInfo() {
+            String weapon   = Board.getMyBoard().getPlayerType().getCurrentStrategy();
+            String ammoSel= "";
+            if (weapon.equals("ARROW")) {
+            	ammoSel = " | Flecha: ";
+            }
+            if (weapon.equals("DIAMOND")) {
+            	ammoSel = " | Diamante: ";
+            }
+            getStatusLabel().setText(" Arma: " + weapon + ammoSel+ "  |  M= Cambiar arma   ESPACIO= disparar   WASD= Moverse");}*/
 
-    private void updateInfo() {
-        if (Board.getMyBoard().getPlayer() != null) {
-            var player = Board.getMyBoard().getPlayer();
-            String weapon   = player.getCurrentStrategy().getName();
-            String ammoInfo = "";
-            if (weapon.equals("ARROW"))   ammoInfo = " | Flecha: "   + player.getAmmoFecha();
-            if (weapon.equals("DIAMOND")) ammoInfo = " | Diamante: " + player.getAmmoRombo();
-            getStatusLabel().setText(
-                    "  Arma: " + weapon + ammoInfo
-                    + "  |  M= Cambiar arma   ESPACIO= disparar   WASD= Moverse");
-        }
-    }
-
-    /**
-     * Muestra el diálogo de fin de partida.
-     * Al pulsar OK: desregistra observer, para el juego, cierra esta ventana
-     * y vuelve a la StartScreen.
-     */
+    //Tratar los mensajes de ganar o perder el juego
     private void showGameOverMessage(String msg, Color color) {
-        SwingUtilities.invokeLater(() -> {
-            getStatusLabel().setText("  " + msg);
-            getStatusLabel().setForeground(color);
-
             JOptionPane.showMessageDialog(this, msg, "Game Over", JOptionPane.INFORMATION_MESSAGE);
-
             Board.getMyBoard().deleteObserver(this);
             Board.getMyBoard().stopGame();
             dispose();
-
-            SwingUtilities.invokeLater(() -> {
-                StartScreen start = new StartScreen();
-                start.setVisible(true);
-            });
-        });
+            //Volvemos a abrir startscreen por si el usu quiere volver a jugar
+            StartScreen start = new StartScreen();
+            start.setVisible(true);
+       
     }
 
     public void colorOnePixel(int row, int col, Color color) {
-        if (row >= 0 && row < Board.WIDTH && col >= 0 && col < Board.LENGTH) {
+        if (row >= 0 && row < 60 && col >= 0 && col < 100) {
             pixelMatrix[row][col].setBackground(color);
         }
     }
 
-    // ── GameController ────────────────────────────────────────────────────────
 
-    /**
-     * El controller solo llama a métodos del modelo.
-     * Es el modelo (Board) quien decide qué notificar y cuándo.
-     */
+    //Controller
     private class GameController implements KeyListener, WindowListener, ActionListener {
 
         private GameController() {}
 
         @Override
-        public void keyPressed(KeyEvent e) {
+        public void keyPressed(KeyEvent e) { //Lee las entradas por teclado
             int key = e.getKeyCode();
-
-            if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+            if (key == KeyEvent.VK_A) {
                 Board.getMyBoard().movePlayerLeft();
-            } else if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            } else if (key == KeyEvent.VK_D) {
                 Board.getMyBoard().movePlayerRight();
-            } else if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+            } else if (key == KeyEvent.VK_W) {
                 Board.getMyBoard().movePlayerUp();
-            } else if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+            } else if (key == KeyEvent.VK_S) {
                 Board.getMyBoard().movePlayerDown();
             } else if (key == KeyEvent.VK_SPACE) {
                 Board.getMyBoard().shoot();
@@ -265,7 +184,7 @@ public class GameScreen extends JFrame implements Observer {
         @Override public void keyReleased(KeyEvent e) {}
 
         @Override
-        public void windowClosing(WindowEvent e) { Board.getMyBoard().stopGame(); }
+        public void windowClosing(WindowEvent e) { Board.getMyBoard().stopGame(); } //Si se cierra la ventana se para el juego
         @Override public void windowOpened(WindowEvent e)      {}
         @Override public void windowClosed(WindowEvent e)      {}
         @Override public void windowIconified(WindowEvent e)   {}

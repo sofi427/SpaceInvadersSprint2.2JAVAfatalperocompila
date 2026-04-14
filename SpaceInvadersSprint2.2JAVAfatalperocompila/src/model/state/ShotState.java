@@ -2,14 +2,15 @@ package model.state;
 
 import java.awt.Color;
 
+//Casilla de disparo
 public class ShotState implements SquareState {
-    @Override
-    public Color getColor() {
+    public Color getColor() { 
         return Color.YELLOW;
     }
-
-    @Override
     public boolean isEmpty() {
         return false;
     }
+	public String getStateS() {
+		return "Shot";
+	} 
 }

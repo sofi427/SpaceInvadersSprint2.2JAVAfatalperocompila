@@ -2,11 +2,9 @@ package model.state;
 
 import java.awt.Color;
 
-/**
- * Interface SquareState - State Pattern
- * Represents the possible states a Square can be in.
- */
+//Metodos para cada uno de los estados de la casilla:
 public interface SquareState {
-    Color getColor();
-    boolean isEmpty();
+    Color getColor(); //Saber su color
+    boolean isEmpty(); //Si es la casilla vacía
+    String getStateS(); //Saber su estado por una string
 }

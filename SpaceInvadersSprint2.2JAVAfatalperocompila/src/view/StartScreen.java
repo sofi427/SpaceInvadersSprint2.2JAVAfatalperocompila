@@ -1,7 +1,6 @@
 package view;
 
 import model.Board;
-import model.player.AbstractPlayer;
 import model.player.PlayerGenerator;
 
 import java.awt.Color;
@@ -40,7 +39,6 @@ public class StartScreen extends JFrame implements Observer {
 
     private StartController controller;
 
-    // ── Entry point ───────────────────────────────────────────────────────────
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -53,28 +51,23 @@ public class StartScreen extends JFrame implements Observer {
         });
     }
 
-    // ── Constructor ───────────────────────────────────────────────────────────
 
     public StartScreen() {
-        setTitle("Space Invaders – Pantalla de Inicio");
+        setTitle("Pantalla de selecci�n");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(true);
         setBounds(100, 100, 700, 471);
-
         Image bgImage = new ImageIcon(
             getClass().getClassLoader().getResource("img/FondoInicio.png")
         ).getImage();
-
         contentPane = new JPanel(null) {
-            @Override
+			private static final long serialVersionUID = 1L;
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
             }
-        };
+        }; 
         contentPane.setBackground(Color.BLACK);
         setContentPane(contentPane);
-
         contentPane.add(getBtnGreen());
         contentPane.add(getBtnBlue());
         contentPane.add(getBtnRed());
@@ -82,17 +75,17 @@ public class StartScreen extends JFrame implements Observer {
         contentPane.add(getLblSubtitle());
         contentPane.add(getLblPressPlay());
         contentPane.add(getLblSelectShip());
-
         setLocationRelativeTo(null);
-
+        
+        //Aniadimos el observer a la startscreen
         Board.getMyBoard().addObserver(this);
     }
 
-    // ── Componentes ───────────────────────────────────────────────────────────
-
+    //Componentes (subtitulo e informacion, botones de seleccion y de play) 
+    
     private JLabel getLblSubtitle() {
         if (lblSubtitle == null) {
-            lblSubtitle = new JLabel("Pulsa A-S-W-D para moverte  |  M para cambiar el arma  |  ESPACIO para disparar!");
+            lblSubtitle = new JLabel("Pulsa WASD para moverte | M para cambiar el arma | ESPACIO para disparar!");
             lblSubtitle.setBounds(60, 135, 580, 22);
             lblSubtitle.setHorizontalAlignment(SwingConstants.CENTER);
             lblSubtitle.setForeground(Color.WHITE);
@@ -103,7 +96,7 @@ public class StartScreen extends JFrame implements Observer {
 
     private JLabel getLblPressPlay() {
         if (lblPressPlay == null) {
-            lblPressPlay = new JLabel("Pulsa Play para jugar");
+            lblPressPlay = new JLabel("�Elige tu nave! Por defecto: VERDE");
             lblPressPlay.setBounds(200, 155, 300, 20);
             lblPressPlay.setHorizontalAlignment(SwingConstants.CENTER);
             lblPressPlay.setForeground(Color.LIGHT_GRAY);
@@ -114,7 +107,7 @@ public class StartScreen extends JFrame implements Observer {
 
     private JLabel getLblSelectShip() {
         if (lblSelectShip == null) {
-            lblSelectShip = new JLabel("¡Elige tu nave! Por defecto: VERDE");
+            lblSelectShip = new JLabel("Pulsa Play para jugar");
             lblSelectShip.setBounds(210, 180, 285, 25);
             lblSelectShip.setHorizontalAlignment(SwingConstants.CENTER);
             lblSelectShip.setForeground(Color.WHITE);
@@ -187,43 +180,27 @@ public class StartScreen extends JFrame implements Observer {
         return controller;
     }
 
-    // ── Observer ──────────────────────────────────────────────────────────────
 
-    /**
-     * Solo reacciona al mensaje "READY" que el modelo envía cuando el tablero
-     * está completamente inicializado y el jugador colocado.
-     * Cualquier otro mensaje (int[][], "WON", "LOST") se ignora aquí.
-     */
-    @Override
+    //La vista reacciona cuando al terminar de inicializar el tablero le notifica READY
+    //Update quita el observer de startscreen, crea la gamescreen, la pone visible y focaliza en ella. Despues deja de visualizar startscreen. 
     public void update(Observable o, Object arg) {
         if (arg instanceof String && ((String) arg).equals("READY")) {
             Board.getMyBoard().deleteObserver(this);
-            SwingUtilities.invokeLater(() -> {
-                GameScreen gameScreen = new GameScreen();
-                gameScreen.setVisible(true);
-                gameScreen.requestFocusInWindow();
-                this.setVisible(false);
-                this.dispose();
-            });
+            GameScreen gameScreen = new GameScreen();
+            gameScreen.setVisible(true);
+            gameScreen.requestFocusInWindow();
+            this.setVisible(false);
         }
     }
 
-    // ── StartController ───────────────────────────────────────────────────────
 
-    /**
-     * El controller solo invoca métodos del modelo.
-     * No toca observers ni notificaciones.
-     */
+    //Controller
     private class StartController implements ActionListener {
-
-        private String selectedShip = "GREEN";
-
+        private String selectedShip = "GREEN"; //Verde como predeterminado por si no se selecciona antes de elegir player
         private StartController() {}
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) { //Elecciones dde player e inicio del juego con play
             Object button = e.getSource();
-
             if (button == btnGreen) {
                 selectedShip = "GREEN";
                 highlightSelection();
@@ -236,22 +213,17 @@ public class StartScreen extends JFrame implements Observer {
             } else if (button == btnCheck) {
                 highlightSelection();
             } else if (button == startButton) {
-                launchGame();
-            }
+                launchGame();}
         }
-
-        private void highlightSelection() {
+        private void highlightSelection() { //Remarcar la elegida con ++blabla++
             btnGreen.setText(selectedShip.equals("GREEN") ? "++VERDE++" : "VERDE");
             btnBlue.setText(selectedShip.equals("BLUE")   ? "++AZUL++"  : "AZUL");
             btnRed.setText(selectedShip.equals("RED")     ? "++ROJA++"  : "ROJA");
         }
-
-        private void launchGame() {
-            Board model = Board.getMyBoard();
-            model.actBoard();                                          // reset + aliens
-            AbstractPlayer player = PlayerGenerator.getGenerator().generate(selectedShip);
-            model.actBoard(player);                                    // coloca jugador → notifica "READY"
-            model.updateBoardEvery200ms();                             // arranca el timer
+        //Inicializa el tablero, genera al jugador y lo coloca en el tablero e inicia el timer de refresco/actualizacion del tablero.
+        private void launchGame() {                                         
+            Board.getMyBoard().initializeBoard(selectedShip);  
+            Board.getMyBoard().actBoardEvery200ms();                            
         }
     }
 }
