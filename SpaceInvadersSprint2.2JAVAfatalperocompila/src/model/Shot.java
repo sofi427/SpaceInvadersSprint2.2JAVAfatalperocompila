@@ -25,7 +25,7 @@ public class Shot {
     	return strategy; 
     }
     
-    public void setStrategy(ShotStrategy strategy){ 
+    public void changeStrategy(ShotStrategy strategy){ 
     	this.strategy = strategy; 
     }
     
