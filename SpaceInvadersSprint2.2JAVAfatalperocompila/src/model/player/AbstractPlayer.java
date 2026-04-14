@@ -52,6 +52,10 @@ public abstract class AbstractPlayer {
     public void consumeShot() {
         currentStrategy.consumeShot();
     }
+    
+    public void shoot() {
+    	
+    }
 
     
     //getters

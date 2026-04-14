@@ -41,13 +41,9 @@ public class Alien {
 
 	}
     
-    public void moveDown() {
+    private void moveDown() {
     	squares.move(0, 1);
 	}
-    
-    public void move(int x, int y) {
-        squares.move(x, y);
-    }
 
     public void stopTimer() {
         timer.cancel();
