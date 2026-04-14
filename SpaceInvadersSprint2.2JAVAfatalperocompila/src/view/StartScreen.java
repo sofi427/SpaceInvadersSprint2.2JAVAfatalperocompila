@@ -184,12 +184,10 @@ public class StartScreen extends JFrame implements Observer {
     //La vista reacciona cuando al terminar de inicializar el tablero le notifica READY
     //Update quita el observer de startscreen, crea la gamescreen, la pone visible y focaliza en ella. Despues deja de visualizar startscreen. 
     public void update(Observable o, Object arg) {
-        if (arg instanceof String && ((String) arg).equals("READY")) {
             Board.getMyBoard().deleteObserver(this);
             GameScreen gameScreen = new GameScreen();
             gameScreen.setVisible(true);
             this.setVisible(false);
-        }
     }
 
 
