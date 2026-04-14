@@ -1,12 +1,16 @@
 package model.composite;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Component interface - Composite Pattern
- * Both Square (leaf) and SquareComposite implement this.
- */
 public interface Component {
-    List<Square> getSquares();
-    void move(int dx, int dy);
+    List<Component> getChildren();
+
+    default ArrayList<Square> getSquares() {
+        ArrayList<Square> result = new ArrayList<>();
+        for (Component child : getChildren()) {
+            result.addAll(child.getSquares());
+        }
+        return result;
+    }
 }
