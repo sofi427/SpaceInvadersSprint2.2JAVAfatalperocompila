@@ -1,1 +1,37 @@
+# ── Eclipse ───────────────────────────────────────────────────────────────────
+.project
+.classpath
+.settings/
+.metadata/
+*.launch
+*.prefs
+ 
+# ── Compilados Java ───────────────────────────────────────────────────────────
 /bin/
+/out/
+*.class
+*.jar
+*.war
+*.ear
+ 
+# ── Logs y temporales ─────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+*.swp
+*.bak
+ 
+# ── Sistema operativo ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ 
+# ── IDEs alternativos (por si alguien usa IntelliJ o VSCode) ──────────────────
+.idea/
+*.iml
+.vscode/
+ 
+# ── Maven / Gradle (por si se añaden en el futuro) ────────────────────────────
+target/
+build/
+.gradle/
