@@ -1,26 +1,27 @@
 package model.player;
 
-/**
- * PlayerFactory - Factory + Singleton.
- * Produces AbstractPlayer subclasses by type string.
- */
 public class PlayerFactory {
-
-    private static PlayerFactory instance;
-
-    private PlayerFactory() {}
-
-    public static PlayerFactory getInstance() {
-        if (instance == null) instance = new PlayerFactory();
-        return instance;
-    }
-
-    public AbstractPlayer generate(String type, int centerX, int centerY) {
-        return switch (type.toUpperCase()) {
-            case "GREEN" -> new GreenPlayer(centerX, centerY);
-            case "BLUE"  -> new BluePlayer(centerX, centerY);
-            case "RED"   -> new RedPlayer(centerX, centerY);
-            default -> throw new IllegalArgumentException("Unknown player type: " + type);
-        };
-    }
+	private static PlayerFactory myPlayerFactory;
+	
+	private PlayerFactory() {}
+	
+	public static PlayerFactory getPlayerFactory(){
+		if (myPlayerFactory == null)
+		    {myPlayerFactory = new PlayerFactory();}
+		return myPlayerFactory;
+	    }
+	
+	public AbstractPlayer generatePlayer(String type, int posX, int posY) {
+		AbstractPlayer myPlayer = null;
+		if (type.equals("Green")) {
+			myPlayer = new GreenPlayer(posX,posY);
+		}
+		else if (type.equals("Blue")) {
+			myPlayer = new BluePlayer(posX,posY);
+		}
+		else if (type.equals("Red")) {
+			myPlayer = new RedPlayer(posX,posY);
+		}
+		return myPlayer;
+	}
 }

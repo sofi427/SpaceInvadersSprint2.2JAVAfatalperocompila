@@ -3,81 +3,58 @@ package model.player;
 import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * AbstractPlayer - base class for all player ships.
- * Renamed from Player to match the package/import used by StartScreen and Board.
- *
- * Adds ammo tracking so GameScreen can display remaining arrow/diamond shots.
- */
 public abstract class AbstractPlayer {
 
-    protected SquareComposite    squares;
-    protected ShotStrategy       currentStrategy;
-    protected List<ShotStrategy> availableStrategies;
-    protected int                strategyIndex = 0;
+	//atributos
+    protected SquareComposite squares;
+    protected ShotStrategy currentStrategy;
+    protected ArrayList<ShotStrategy> strategyList;
+    protected int strategyIndex;
 
+    //constructora
     public AbstractPlayer(int centerX, int centerY) {
-        this.squares             = buildShape(centerX, centerY);
-        this.availableStrategies = buildStrategies();
-        this.currentStrategy     = availableStrategies.get(0);
+        this.squares = makeShape(centerX, centerY);
+        this.strategyList = createStrategyList();
+        this.strategyIndex = 0;
+        this.currentStrategy = strategyList.get(0);
     }
 
-    protected abstract SquareComposite    buildShape(int cx, int cy);
-    protected abstract List<ShotStrategy> buildStrategies();
+    protected abstract SquareComposite makeShape(int x, int y);
+    protected abstract ArrayList<ShotStrategy> createStrategyList();
+    public abstract String getType();
 
-    // ── Movement ──────────────────────────────────────────────────────────────
+    //movimientos
+    public void moveLeft() { squares.move(-1,  0); }
+    public void moveRight() { squares.move( 1,  0); }
+    public void moveUp() { squares.move( 0, -1); }
+    public void moveDown() { squares.move( 0,  1); }
 
-    public void move(int dx, int dy) { squares.move(dx, dy); }
-
-    // ── Weapon cycling ────────────────────────────────────────────────────────
-
-    public void cycleWeapon() {
-        strategyIndex    = (strategyIndex + 1) % availableStrategies.size();
-        currentStrategy  = availableStrategies.get(strategyIndex);
+    
+    //metodos de disparo
+    
+    public void nextStrategy() {
+        if (strategyIndex + 1 >= strategyList.size())
+        { strategyIndex = 0; }
+        else
+        { strategyIndex++; }
+        currentStrategy = strategyList.get(strategyIndex);
     }
-
-    // ── Ammo ──────────────────────────────────────────────────────────────────
-
-    /**
-     * Returns true if the player can still fire with the current strategy.
-     * Pixel strategy is always unlimited (-1).
-     */
-    public boolean hasAmmo() {
+    
+    public boolean canShootCurrentStrategy() {
         int max = currentStrategy.getMaxShots();
-        if (max == -1) return true;
+        if (max == -1) 
+        { return true; }
         return currentStrategy.getRemainingShots() > 0;
     }
 
-    /**
-     * Deducts one shot from the current strategy's ammo pool.
-     * No-op for unlimited strategies.
-     */
-    public void consumeAmmo() {
+    public void consumeShot() {
         currentStrategy.consumeShot();
     }
 
-    /** Remaining arrow shots (used by GameScreen status bar). */
-    public int getAmmoFecha() {
-        return availableStrategies.stream()
-                .filter(s -> s.getName().equals("Arrow"))
-                .mapToInt(ShotStrategy::getRemainingShots)
-                .findFirst()
-                .orElse(0);
-    }
-
-    /** Remaining diamond shots (used by GameScreen status bar). */
-    public int getAmmoRombo() {
-        return availableStrategies.stream()
-                .filter(s -> s.getName().equals("Diamond"))
-                .mapToInt(ShotStrategy::getRemainingShots)
-                .findFirst()
-                .orElse(0);
-    }
-
-    // ── Getters ───────────────────────────────────────────────────────────────
-
-    public ShotStrategy    getCurrentStrategy() { return currentStrategy; }
-    public SquareComposite getSquares()          { return squares; }
+    
+    //getters
+    public ShotStrategy getCurrentStrategy() { return currentStrategy; }
+    public SquareComposite getSquares() { return squares; }
 }

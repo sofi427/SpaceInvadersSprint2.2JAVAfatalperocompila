@@ -9,12 +9,8 @@ import model.strategy.PixelStrategy;
 import model.strategy.ShotStrategy;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * RedPlayer - strategies: Pixel, Arrow and Diamond
- */
 public class RedPlayer extends AbstractPlayer {
 
     public RedPlayer(int centerX, int centerY) {
@@ -22,25 +18,34 @@ public class RedPlayer extends AbstractPlayer {
     }
 
     @Override
-    protected SquareComposite buildShape(int cx, int cy) {
+    protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         PlayerState s = new PlayerState(Color.RED);
-        c.add(new Square(cx - 1, cy - 2, s));
-        c.add(new Square(cx,     cy - 2, s));
-        c.add(new Square(cx + 1, cy - 2, s));
-        c.add(new Square(cx - 1, cy - 1, s));
-        c.add(new Square(cx,     cy - 1, s));
-        c.add(new Square(cx + 1, cy - 1, s));
-        c.add(new Square(cx - 2, cy,     s));
-        c.add(new Square(cx - 1, cy,     s));
-        c.add(new Square(cx,     cy,     s));
-        c.add(new Square(cx + 1, cy,     s));
-        c.add(new Square(cx + 2, cy,     s));
+        c.add(new Square(x - 1, y - 2, s));
+        c.add(new Square(x,     y - 2, s));
+        c.add(new Square(x + 1, y - 2, s));
+        c.add(new Square(x - 1, y - 1, s));
+        c.add(new Square(x,     y - 1, s));
+        c.add(new Square(x + 1, y - 1, s));
+        c.add(new Square(x - 2, y,     s));
+        c.add(new Square(x - 1, y,     s));
+        c.add(new Square(x,     y,     s));
+        c.add(new Square(x + 1, y,     s));
+        c.add(new Square(x + 2, y,     s));
         return c;
     }
 
     @Override
-    protected List<ShotStrategy> buildStrategies() {
-        return Arrays.asList(new PixelStrategy(), new ArrowStrategy(), new DiamondStrategy());
+    protected ArrayList<ShotStrategy> createStrategyList() {
+    	ArrayList<ShotStrategy> resul = new ArrayList<ShotStrategy> ();
+    	resul.add(new PixelStrategy());
+    	resul.add(new ArrowStrategy());
+    	resul.add(new DiamondStrategy());
+        return resul;
+    }
+    
+    @Override
+    public String getType() {
+    	return "Red";
     }
 }

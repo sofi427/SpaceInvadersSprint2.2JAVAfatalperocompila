@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class AlienGroup {
 
-    private final List<Alien> aliens = new ArrayList<>();
+    private final ArrayList<Alien> aliens = new ArrayList<>();
     private static final int MIN_SPACING = 7; // min distance between alien centers
 
     public AlienGroup() {
@@ -32,7 +32,7 @@ public class AlienGroup {
         while (aliens.size() < count && attempts < 2000) {
             attempts++;
             // keep aliens in the top quarter, away from edges
-            int cx = 3 + rng.nextInt(Board.LENGTH - 6);
+            int cx = 3 + rng.nextInt(100 - 6);
             int cy = 2 + rng.nextInt(8);
 
             if (noOverlap(cx, cy, placed)) {
@@ -94,7 +94,7 @@ public class AlienGroup {
     /** Returns true if any alien has reached the bottom boundary. */
     public boolean hasReachedBottom() {
         for (Alien a : aliens) {
-            if (a.getBottomY() >= Board.WIDTH - 1) return true;
+            if (a.getBottomY() >= 60 - 1) return true;
         }
         return false;
     }

@@ -8,12 +8,8 @@ import model.strategy.PixelStrategy;
 import model.strategy.ShotStrategy;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * BluePlayer - strategies: Pixel and Diamond
- */
 public class BluePlayer extends AbstractPlayer {
 
     public BluePlayer(int centerX, int centerY) {
@@ -21,23 +17,31 @@ public class BluePlayer extends AbstractPlayer {
     }
 
     @Override
-    protected SquareComposite buildShape(int cx, int cy) {
+    protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         PlayerState s = new PlayerState(Color.CYAN);
-        c.add(new Square(cx - 1, cy - 1, s));
-        c.add(new Square(cx,     cy - 1, s));
-        c.add(new Square(cx + 1, cy - 1, s));
-        c.add(new Square(cx,     cy,     s));
-        c.add(new Square(cx - 2, cy + 1, s));
-        c.add(new Square(cx - 1, cy + 1, s));
-        c.add(new Square(cx,     cy + 1, s));
-        c.add(new Square(cx + 1, cy + 1, s));
-        c.add(new Square(cx + 2, cy + 1, s));
+        c.add(new Square(x - 1, y - 1, s));
+        c.add(new Square(x,     y - 1, s));
+        c.add(new Square(x + 1, y - 1, s));
+        c.add(new Square(x,     y,     s));
+        c.add(new Square(x - 2, y + 1, s));
+        c.add(new Square(x - 1, y + 1, s));
+        c.add(new Square(x,     y + 1, s));
+        c.add(new Square(x + 1, y + 1, s));
+        c.add(new Square(x + 2, y + 1, s));
         return c;
     }
 
     @Override
-    protected List<ShotStrategy> buildStrategies() {
-        return Arrays.asList(new PixelStrategy(), new DiamondStrategy());
+    protected ArrayList<ShotStrategy> createStrategyList() {
+    	ArrayList<ShotStrategy> resul = new ArrayList<ShotStrategy> ();
+    	resul.add(new PixelStrategy());
+    	resul.add(new DiamondStrategy());
+        return resul;
+    }
+    
+    @Override
+    public String getType() {
+    	return "Blue";
     }
 }
