@@ -44,7 +44,7 @@ public class Board extends Observable {
 
     public void initializeBoard(String type){
         this.initializeSquares();
-        this.player = PlayerGenerator.getPlayerGenerator().generatePlayer(type, 5,5);
+        this.player = PlayerGenerator.getPlayerGenerator().generatePlayer(type, 50,55);
         this.player.registerOnBoard();
         this.startTimer();
     }
