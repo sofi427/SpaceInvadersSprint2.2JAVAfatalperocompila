@@ -2,6 +2,8 @@ package model;
 
 import java.util.Observable;
 import java.util.Timer;
+import java.util.TimerTask;
+
 import model.composite.Square;
 import model.player.AbstractPlayer;
 import model.player.PlayerGenerator;
@@ -43,9 +45,21 @@ public class Board extends Observable {
     public void initializeBoard(String type){
         this.initializeSquares();
         this.player = PlayerGenerator.getPlayerGenerator().generatePlayer(type, 5,5);
+        this.player.registerOnBoard();
+        this.startTimer();
     }
 
-    public void movePlayerRight(){
+    private void startTimer() {
+    	timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                actBoardEvery200ms();
+            }
+        }, 0, 200);		
+	}
+
+	public void movePlayerRight(){
         this.player.moveRight();
     }
 
@@ -119,7 +133,9 @@ public class Board extends Observable {
     }
 
     public void StopGame(){
-        this.timer.cancel();
+    	if (timer != null) {
+            this.timer.cancel();
+    	}
     }
     
 }

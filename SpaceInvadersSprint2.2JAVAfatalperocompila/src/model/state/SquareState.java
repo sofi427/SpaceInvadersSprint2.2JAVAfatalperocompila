@@ -7,4 +7,10 @@ public interface SquareState {
     Color getColor(); //Saber su color
     boolean isEmpty(); //Si es la casilla vacía
     String getStateS(); //Saber su estado por una string
+    
+  //Colisiones con otras casillas
+    String collideWith(SquareState coli); 
+    String collideWithAlien();
+    String collideWithShot();
+    String collideWithPlayer();
 }

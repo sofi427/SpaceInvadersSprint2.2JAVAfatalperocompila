@@ -4,13 +4,10 @@ import model.Board;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -22,7 +19,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 @SuppressWarnings("deprecation")
 public class GameScreen extends JFrame implements Observer {
@@ -49,6 +45,7 @@ public class GameScreen extends JFrame implements Observer {
         addWindowListener(gController);
         setFocusable(true);
         requestFocusInWindow();
+        setSize(1000, 650); // <-- tamaño fijo: 100 celdas x 60 celdas + barra de estado
         setLocationRelativeTo(null);
        
         //Aniadimos observer a gamescreen
@@ -89,7 +86,7 @@ public class GameScreen extends JFrame implements Observer {
 
     
     //El update reacciona segun lo que le notifique board, si llega una string sera del juego ganado o perdido, aparecera el mensaje que corresponda.
-    //Si llega una matriz de enteros sera porque bosrd se ha terminado de actualizarse y la vista debe hacerlo tambien.
+    //Si llega una matriz de enteros sera porque board se ha terminado de actualizarse y la vista debe hacerlo tambien.
     public void update(Observable o, Object arg) {
         if (arg instanceof String) {
             String msg = (String) arg;
@@ -104,14 +101,13 @@ public class GameScreen extends JFrame implements Observer {
         if (arg instanceof int[][]) {
             int[][] matrix = (int[][]) arg;
                 refreshMatrix(matrix);
-                updateInfo();
         }
     }
     
     //Coger el color del player e inmediatamente debajo el metodo para repintar la matriz
     private Color colorPlayer() {
-    	if (Board.getMyBoard().getPlayerType()=="Blue") { return Color.BLUE;}
-    	else if(Board.getMyBoard().getPlayerType()=="Red") { return Color.RED;}
+    	if (Board.getMyBoard().getPlayerType().equals("Blue")) { return Color.BLUE;}
+    	else if(Board.getMyBoard().getPlayerType().equals("Red")) { return Color.RED;}
     	else return Color.green;
     }
     private void refreshMatrix(int[][] matrix) {
@@ -125,24 +121,11 @@ public class GameScreen extends JFrame implements Observer {
         }
     }
 
-    
-    //Actualizar info del tipo de municion seleccionada
-    /*private void updateInfo() {
-            String weapon   = Board.getMyBoard().getPlayerType().getCurrentStrategy();
-            String ammoSel= "";
-            if (weapon.equals("ARROW")) {
-            	ammoSel = " | Flecha: ";
-            }
-            if (weapon.equals("DIAMOND")) {
-            	ammoSel = " | Diamante: ";
-            }
-            getStatusLabel().setText(" Arma: " + weapon + ammoSel+ "  |  M= Cambiar arma   ESPACIO= disparar   WASD= Moverse");}*/
-
     //Tratar los mensajes de ganar o perder el juego
     private void showGameOverMessage(String msg, Color color) {
             JOptionPane.showMessageDialog(this, msg, "Game Over", JOptionPane.INFORMATION_MESSAGE);
             Board.getMyBoard().deleteObserver(this);
-            Board.getMyBoard().stopGame();
+            Board.getMyBoard().StopGame();
             dispose();
             //Volvemos a abrir startscreen por si el usu quiere volver a jugar
             StartScreen start = new StartScreen();
@@ -184,7 +167,7 @@ public class GameScreen extends JFrame implements Observer {
         @Override public void keyReleased(KeyEvent e) {}
 
         @Override
-        public void windowClosing(WindowEvent e) { Board.getMyBoard().stopGame(); } //Si se cierra la ventana se para el juego
+        public void windowClosing(WindowEvent e) { Board.getMyBoard().StopGame(); } //Si se cierra la ventana se para el juego
         @Override public void windowOpened(WindowEvent e)      {}
         @Override public void windowClosed(WindowEvent e)      {}
         @Override public void windowIconified(WindowEvent e)   {}

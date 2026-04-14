@@ -36,27 +36,29 @@ public class SquareComposite implements Component {
             int ny = s.getPosY() + dy;
 
             if (nx < 0 || nx >= Board.getMyBoard().getWidth()
-            || ny < 0 || ny >= Board.getMyBoard().getHeight()) {
-                return;
-            }
+             || ny < 0 || ny >= Board.getMyBoard().getHeight()) return;
 
             Square dest = Board.getMyBoard().getSquare(nx, ny);
-
-            if (!dest.getState().isEmpty()) {
-                return;
-            }
-
+            if (!dest.getState().isEmpty()) return;
             target.add(dest);
         }
 
         SquareState shipState = current.get(0).getState();
 
+        // Limpiar squares del Board
         for (Square s : current) {
-            s.setState(new EmptyState());
+            Board.getMyBoard().getSquare(s.getPosX(), s.getPosY()).setState(new EmptyState());
         }
 
+        // Pintar destinos en el Board
         for (Square s : target) {
             s.setState(shipState);
+        }
+
+        // Actualizar referencias internas del composite
+        children.clear();
+        for (Square s : target) {
+            children.add(s);
         }
     }
 

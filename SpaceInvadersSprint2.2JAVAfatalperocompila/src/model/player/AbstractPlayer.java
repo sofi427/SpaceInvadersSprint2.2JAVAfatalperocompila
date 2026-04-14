@@ -1,5 +1,7 @@
 package model.player;
 
+import model.Board;
+import model.composite.Square;
 import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
@@ -57,6 +59,20 @@ public abstract class AbstractPlayer {
     	
     }
 
+ //Para registrar las casills de player en board
+    public void registerOnBoard() {
+        ArrayList<Square> mySquares = squares.getSquares();
+        squares = new SquareComposite();
+        
+        for (Square sq : mySquares) {
+            // Obtener el square real del Board
+            Square boardSquare = Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY());
+            // Copiarle el estado
+            boardSquare.setState(sq.getState());
+            // Añadir el square del Board al composite (no el privado)
+            squares.add(boardSquare);
+        }
+    }
     
     //getters
     public ShotStrategy getCurrentStrategy() { return currentStrategy; }

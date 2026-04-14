@@ -196,19 +196,19 @@ public class StartScreen extends JFrame implements Observer {
 
     //Controller
     private class StartController implements ActionListener {
-        private String selectedShip = "GREEN"; //Verde como predeterminado por si no se selecciona antes de elegir player
+    	private String selectedShip = "Green";  //Verde como predeterminado por si no se selecciona antes de elegir player
         private StartController() {}
 
         public void actionPerformed(ActionEvent e) { //Elecciones dde player e inicio del juego con play
             Object button = e.getSource();
             if (button == btnGreen) {
-                selectedShip = "GREEN";
+                selectedShip = "Green";
                 highlightSelection();
             } else if (button == btnBlue) {
-                selectedShip = "BLUE";
+                selectedShip = "Blue";
                 highlightSelection();
             } else if (button == btnRed) {
-                selectedShip = "RED";
+                selectedShip = "Red";
                 highlightSelection();
             } else if (button == btnCheck) {
                 highlightSelection();
@@ -216,14 +216,13 @@ public class StartScreen extends JFrame implements Observer {
                 launchGame();}
         }
         private void highlightSelection() { //Remarcar la elegida con ++blabla++
-            btnGreen.setText(selectedShip.equals("GREEN") ? "++VERDE++" : "VERDE");
-            btnBlue.setText(selectedShip.equals("BLUE")   ? "++AZUL++"  : "AZUL");
-            btnRed.setText(selectedShip.equals("RED")     ? "++ROJA++"  : "ROJA");
+            btnGreen.setText(selectedShip.equals("Green") ? "++VERDE++" : "VERDE");
+            btnBlue.setText(selectedShip.equals("Blue")   ? "++AZUL++"  : "AZUL");
+            btnRed.setText(selectedShip.equals("Red")     ? "++ROJA++"  : "ROJA");
         }
         //Inicializa el tablero, genera al jugador y lo coloca en el tablero e inicia el timer de refresco/actualizacion del tablero.
         private void launchGame() {                                         
             Board.getMyBoard().initializeBoard(selectedShip);  
-            Board.getMyBoard().actBoardEvery200ms();                            
         }
     }
 }
