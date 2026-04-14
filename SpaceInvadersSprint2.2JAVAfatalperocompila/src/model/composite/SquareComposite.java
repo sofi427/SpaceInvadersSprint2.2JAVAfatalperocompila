@@ -1,12 +1,14 @@
 package model.composite;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import model.Board;
+import model.state.EmptyState;
+import model.state.SquareState;
 
 public class SquareComposite implements Component {
 
-    private ArrayList<Component> children; // o components, items, etc.
+    private ArrayList<Component> children; 
 
     public SquareComposite() {
         this.children = new ArrayList<>();
@@ -26,23 +28,40 @@ public class SquareComposite implements Component {
     }
 
     public void move(int dx, int dy) {
-
-        ArrayList<Square> current = this.getSquares();          
-        ArrayList<Component> newChildren = new ArrayList<>();
+        ArrayList<Square> current = this.getSquares();
+        ArrayList<Square> target = new ArrayList<>();
 
         for (Square s : current) {
             int nx = s.getPosX() + dx;
             int ny = s.getPosY() + dy;
 
-            if (nx < 0 || nx >= Board.getMyBoard().getWidth() || ny < 0 || ny >= Board.getMyBoard().getHeight()) {
+            if (nx < 0 || nx >= Board.getMyBoard().getWidth()
+            || ny < 0 || ny >= Board.getMyBoard().getHeight()) {
                 return;
             }
 
-            Square newSquare = Board.getMyBoard().getSquare(nx, ny);
-            newChildren.add(newSquare);
+            Square dest = Board.getMyBoard().getSquare(nx, ny);
+
+            if (!dest.getState().isEmpty()) {
+                return;
+            }
+
+            target.add(dest);
         }
 
-        this.children.clear();
-        this.children.addAll(newChildren);
+        SquareState shipState = current.get(0).getState();
+
+        for (Square s : current) {
+            s.setState(new EmptyState());
+        }
+
+        for (Square s : target) {
+            s.setState(shipState);
+        }
+    }
+
+    @Override
+    public List<Component> getChildren() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
