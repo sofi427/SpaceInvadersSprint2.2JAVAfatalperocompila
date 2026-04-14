@@ -188,7 +188,6 @@ public class StartScreen extends JFrame implements Observer {
             Board.getMyBoard().deleteObserver(this);
             GameScreen gameScreen = new GameScreen();
             gameScreen.setVisible(true);
-            gameScreen.requestFocusInWindow();
             this.setVisible(false);
         }
     }

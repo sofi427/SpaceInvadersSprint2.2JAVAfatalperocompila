@@ -42,12 +42,11 @@ public class GameScreen extends JFrame implements Observer {
         contentPane.add(getStatusLabel(),   BorderLayout.SOUTH);
         gController = new GameController();
         addKeyListener(gController);
-        addWindowListener(gController);
         setFocusable(true);
-        requestFocusInWindow();
-        setSize(1000, 650); // <-- tamaño fijo: 100 celdas x 60 celdas + barra de estado
+        addWindowListener(gController);
+        setSize(1000, 650); 
         setLocationRelativeTo(null);
-       
+        requestFocusInWindow();
         //Aniadimos observer a gamescreen
         Board.getMyBoard().addObserver(this);
     }
@@ -69,7 +68,6 @@ public class GameScreen extends JFrame implements Observer {
         return matrixPanel;
     }
 
-    
 
     private JLabel getStatusLabel() {
         if (statusLabel == null) {
@@ -91,9 +89,9 @@ public class GameScreen extends JFrame implements Observer {
         if (arg instanceof String) {
             String msg = (String) arg;
             if (msg.equals("WON")) {
-                showGameOverMessage("¡Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
+                showGameOverMessage("ï¿½Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
             } else if (msg.equals("LOST")) {
-                showGameOverMessage("Has perdido. La invasión ha comenzado. Corre", Color.RED);
+                showGameOverMessage("Has perdido. La invasiï¿½n ha comenzado. Corre", Color.RED);
             }
             return;
         }
@@ -146,7 +144,7 @@ public class GameScreen extends JFrame implements Observer {
         private GameController() {}
 
         @Override
-        public void keyPressed(KeyEvent e) { //Lee las entradas por teclado
+        public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_A) {
                 Board.getMyBoard().movePlayerLeft();
@@ -163,7 +161,7 @@ public class GameScreen extends JFrame implements Observer {
             }
         }
 
-        @Override public void keyTyped(KeyEvent e)    {}
+        @Override public void keyTyped(KeyEvent e) {}
         @Override public void keyReleased(KeyEvent e) {}
 
         @Override

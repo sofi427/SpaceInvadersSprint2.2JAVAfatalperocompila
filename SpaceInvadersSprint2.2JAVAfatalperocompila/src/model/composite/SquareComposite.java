@@ -39,7 +39,16 @@ public class SquareComposite implements Component {
              || ny < 0 || ny >= Board.getMyBoard().getHeight()) return;
 
             Square dest = Board.getMyBoard().getSquare(nx, ny);
-            if (!dest.getState().isEmpty()) return;
+            if (!dest.getState().isEmpty()) {
+                boolean isOwnSquare = false;
+                for (Square currentSquare : current) {
+                    if (currentSquare.getPosX() == nx && currentSquare.getPosY() == ny) {
+                        isOwnSquare = true;
+                        break;
+                    }
+                }
+                if (!isOwnSquare) return;
+            }
             target.add(dest);
         }
 

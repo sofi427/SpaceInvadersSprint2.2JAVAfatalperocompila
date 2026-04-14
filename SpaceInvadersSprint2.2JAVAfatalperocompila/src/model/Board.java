@@ -54,9 +54,9 @@ public class Board extends Observable {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                actBoardEvery200ms();
+                actBoardEvery20ms();
             }
-        }, 0, 200);		
+        }, 0, 20);		
 	}
 
 	public void movePlayerRight(){
@@ -81,7 +81,7 @@ public class Board extends Observable {
         }
     }
    
-    public void actBoardEvery200ms() {
+    public void actBoardEvery20ms() {
         int[][] matrix = new int[WIDTH][LENGTH];
 
         for (int row = 0; row < WIDTH; row++) {
