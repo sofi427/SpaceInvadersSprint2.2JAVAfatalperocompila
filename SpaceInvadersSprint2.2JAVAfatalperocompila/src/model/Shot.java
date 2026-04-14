@@ -49,7 +49,7 @@ public class Shot {
         for (int i=0; i<squares.getChildren().size(); i++) {
         	Component sq=squares.getChildren().get(i);
             if (((Square) sq).getPosY()-1 < 0) {
-                destroy();
+                destroyShot();
                 return;
             }
         }
@@ -57,7 +57,7 @@ public class Shot {
         Board.getMyBoard().onShotMoved(this);
     }
 
-    public void destroy() {
+    public void destroyShot() {
         active = false;
         if (timer != null) {
         	timer.cancel();
