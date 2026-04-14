@@ -1,21 +1,10 @@
 package model;
 
-import model.composite.Square;
-import model.player.AbstractPlayer;
-
 import java.util.Observable;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.swing.SwingUtilities;
-
+import model.composite.Square;
+import model.player.AbstractPlayer;
 import model.player.PlayerGenerator;
-import model.state.AlienState;
-import model.state.EmptyState;
-import model.state.PlayerState;
-import model.state.ShotState;
-import model.state.SquareState;
 
 @SuppressWarnings("deprecation")
 public class Board extends Observable {
@@ -39,6 +28,10 @@ public class Board extends Observable {
         for (int row = 0; row < WIDTH; row++)
 			for (int col = 0; col < LENGTH; col++)
 				squares[row][col] = new Square(col, row);
+        
+        setChanged();
+        this.notifyObservers("READY");
+
     }
 
     public static Board getMyBoard() {
@@ -49,26 +42,30 @@ public class Board extends Observable {
 
     public void initializeBoard(String type){
         this.initializeSquares();
-        this.player = PlayerGenerator.getGenerator().generate(type);
+        this.player = PlayerGenerator.getPlayerGenerator().generatePlayer(type, 5,5);
     }
 
     public void movePlayerRight(){
-        this.player.movePlayerRight();
+        this.player.moveRight();
     }
 
     public void movePlayerLeft(){
-        this.player.movePlayerLeft();
+        this.player.moveLeft();
     }
 
     public void movePlayerUp(){
-        this.player.movePlayerUp();
+        this.player.moveUp();
     }
 
     public void movePlayerDown(){
-        this.player.movePlayerDown();
+        this.player.moveDown();
     }
 
-    
+    public void shoot(){
+        if(this.player.canShootCurrentStrategy()){
+            this.player.consumeShot();
+        }
+    }
    
     public void actBoardEvery200ms() {
         int[][] matrix = new int[WIDTH][LENGTH];
@@ -112,4 +109,17 @@ public class Board extends Observable {
 
     public int getWidth() { return LENGTH; }
     public int getHeight() { return WIDTH; }
+
+    public String getCurrentShotStrategy(){
+        return this.player.getCurrentStrategy().getName();
+    }
+
+    public void changePlayerStrategy(){
+        this.player.nextStrategy();
+    }
+
+    public void StopGame(){
+        this.timer.cancel();
+    }
+    
 }
