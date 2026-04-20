@@ -12,10 +12,20 @@ import java.util.ArrayList;
 
 public class BluePlayer extends AbstractPlayer {
 
-    public BluePlayer(int centerX, int centerY) {
+	private static BluePlayer myBluePlayer;
+	
+    private BluePlayer(int centerX, int centerY) {
         super(centerX, centerY);
     }
 
+    @Override
+    public BluePlayer getPlayer(int centerX, int centerY) {
+		if (myBluePlayer == null) {
+			myBluePlayer = new BluePlayer(centerX, centerY);
+		}
+		return myBluePlayer;
+	}
+    
     @Override
     protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();

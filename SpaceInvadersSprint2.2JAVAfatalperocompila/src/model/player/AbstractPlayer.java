@@ -6,23 +6,28 @@ import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
-public abstract class AbstractPlayer {
+@SuppressWarnings("deprecation")
+public abstract class AbstractPlayer extends Observable{
 
 	//atributos
-    protected SquareComposite squares;
-    protected ShotStrategy currentStrategy;
-    protected ArrayList<ShotStrategy> strategyList;
-    protected int strategyIndex;
+	private static AbstractPlayer myPlayer;
+    private SquareComposite squares;
+    private ShotStrategy currentStrategy;
+    private ArrayList<ShotStrategy> strategyList;
+    private int strategyIndex;
+    private boolean gameLost;
 
     //constructora
-    public AbstractPlayer(int centerX, int centerY) {
+    protected AbstractPlayer(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
         this.strategyList = createStrategyList();
         this.strategyIndex = 0;
         this.currentStrategy = strategyList.get(0);
     }
 
+    protected abstract AbstractPlayer getPlayer(int centerX, int centerY);
     protected abstract SquareComposite makeShape(int x, int y);
     protected abstract ArrayList<ShotStrategy> createStrategyList();
     public abstract String getType();

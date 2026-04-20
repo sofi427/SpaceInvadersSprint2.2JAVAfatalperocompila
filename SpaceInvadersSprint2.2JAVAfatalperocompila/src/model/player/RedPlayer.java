@@ -13,10 +13,20 @@ import java.util.ArrayList;
 
 public class RedPlayer extends AbstractPlayer {
 
-    public RedPlayer(int centerX, int centerY) {
+	private static RedPlayer myRedPlayer;
+	
+    private RedPlayer(int centerX, int centerY) {
         super(centerX, centerY);
     }
 
+    @Override
+    public RedPlayer getPlayer(int centerX, int centerY) {
+		if (myRedPlayer == null) {
+			myRedPlayer = new RedPlayer(centerX, centerY);
+		}
+		return myRedPlayer;
+	}
+    
     @Override
     protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
