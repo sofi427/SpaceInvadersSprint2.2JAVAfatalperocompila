@@ -34,8 +34,8 @@ public class AlienGroup {
         return myAlienGroup;
     }
 
-    private boolean noOverlap(Alien newAlien) {
-        for (Square newSq : newAlien.getSquares().getSquares()) {
+    private boolean noOverlap(Alien newAlien) {    // Aquí el método getSquares ya no existe en Composite, 
+        for (Square newSq : newAlien.getSquares().getSquares()) {  // tendrías que llamar solamente a move creo
             for (Alien existing : aliens) {
                 for (Square existSq : existing.getSquares().getSquares()) {
                     if (newSq.getPosX() == existSq.getPosX() && newSq.getPosY() == existSq.getPosY())

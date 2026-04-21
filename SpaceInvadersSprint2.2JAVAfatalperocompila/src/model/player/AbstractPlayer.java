@@ -69,7 +69,7 @@ public abstract class AbstractPlayer {
             Square boardSquare = Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY());
             // Copiarle el estado
             boardSquare.setState(sq.getState());
-            // Añadir el square del Board al composite (no el privado)
+            // Aï¿½adir el square del Board al composite (no el privado)
             squares.add(boardSquare);
         }
     }
