@@ -1,25 +1,28 @@
 package model.state;
 
 import java.awt.Color;
+import model.player.AbstractPlayer;
 
-//Casilla de jugador
 public class PlayerState implements SquareState {
-    private final Color color;
 
-    public PlayerState(Color color) {
-        this.color = color;}
-    public Color getColor() {
-        return color; }
-    public boolean isEmpty() {
-        return false;}
-	public String getStateS() {
-		return "PLAYER";}
-	public String collideWith(SquareState coli) { 
-		return coli.collideWithPlayer(); }
-	public String collideWithAlien()  { 
-		return "PLAYER_HIT"; }
-	public String collideWithShot()   { 
-		return "NONE"; }
-	public String collideWithPlayer() { 
-		return "NONE"; }
+    @Override
+    public Color getColor() {return AbstractPlayer.getPlayer().getColor();}
+
+    @Override
+    public boolean isEmpty() {return false; }
+
+    @Override
+    public String getStateS() {return "PLAYER"; }
+
+    @Override
+    public void collideWith(SquareState other) {other.collideWithPlayer();}
+    
+    @Override
+    public void collideWithAlien() {AbstractPlayer.getPlayer().notifyLost();}
+
+    @Override
+    public void collideWithShot() {}
+
+    @Override
+    public void collideWithPlayer() {}
 }

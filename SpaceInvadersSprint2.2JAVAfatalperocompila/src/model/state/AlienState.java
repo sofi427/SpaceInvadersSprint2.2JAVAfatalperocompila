@@ -2,20 +2,31 @@ package model.state;
 
 import java.awt.Color;
 
-//Casilla de alien
+import model.player.AbstractPlayer;
+
 public class AlienState implements SquareState {
-    public Color getColor() {
-        return Color.MAGENTA;}
-    public boolean isEmpty() {
-        return false;}
-	public String getStateS() {
-		return "Alien";}
-	public String collideWith(SquareState coli) { 
-		return coli.collideWithAlien(); }
-	public String collideWithAlien()  { 
-		return "NONE"; }
-	public String collideWithShot()   { 
-		return "ALIEN_KILLED"; }
-	public String collideWithPlayer() { 
-		return "PLAYER_HIT"; }
+
+    @Override
+    public Color getColor() {return Color.MAGENTA;}
+
+    @Override
+    public boolean isEmpty() {return false;}
+
+    @Override
+    public String getStateS() {return "ALIEN";}
+
+    @Override
+    public void collideWith(SquareState other) {other.collideWithAlien();}
+
+    @Override
+    public void collideWithPlayer() {AbstractPlayer.getPlayer().notifyLost();}
+
+    @Override
+    public void collideWithShot() {
+        // Aquí tenemos que eliminar el alien, linea con alienmanager??
+    }
+
+    @Override
+    public void collideWithAlien() {}
 }
+``

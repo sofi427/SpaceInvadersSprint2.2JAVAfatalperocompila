@@ -5,13 +5,16 @@ import model.player.AbstractPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 
-public class AlienGroup {
+@SuppressWarnings("deprecation")
+public class AlienGroup extends Observable{
 
 	private static AlienGroup myAlienGroup;
     private final ArrayList<Alien> aliens = new ArrayList<>();
     private Random random = new Random();
+    private boolean gameWon;
 
     public AlienGroup() {
     	int count = random.nextInt(5) + 4; // 4 a 8 aliens

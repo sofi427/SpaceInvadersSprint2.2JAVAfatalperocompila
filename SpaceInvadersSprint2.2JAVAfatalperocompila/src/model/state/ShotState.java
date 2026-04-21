@@ -2,20 +2,28 @@ package model.state;
 
 import java.awt.Color;
 
-//Casilla de disparo
 public class ShotState implements SquareState {
-    public Color getColor() { 
-        return Color.YELLOW;}
-    public boolean isEmpty() {
-        return false;}
-	public String getStateS() {
-		return "Shot";} 
-	public String collideWith(SquareState coli) { 
-		return coli.collideWithShot(); }
-	public String collideWithAlien()  { 
-		return "ALIEN_KILLED"; }
-	public String collideWithShot()   { 
-		return "NONE"; }
-	public String collideWithPlayer() { 
-		return "NONE"; }
+
+    @Override
+    public Color getColor() {return Color.YELLOW;}
+
+    @Override
+    public boolean isEmpty() {return false;}
+
+    @Override
+    public String getStateS() {return "SHOT";}
+
+    @Override
+    public void collideWith(SquareState other) {other.collideWithShot();}
+
+    @Override
+    public void collideWithAlien() {
+        //Aqui deberia desaparecer el disparo
+    }
+
+    @Override
+    public void collideWithShot() {}
+
+    @Override
+    public void collideWithPlayer() {}
 }
