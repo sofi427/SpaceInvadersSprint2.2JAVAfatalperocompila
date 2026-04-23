@@ -78,4 +78,8 @@ public class SquareComposite implements Component {
             to.setState(originState);
         }
     }
+
+    public ArrayList<Component> getSquares() {
+        return children;
+    }
 }
