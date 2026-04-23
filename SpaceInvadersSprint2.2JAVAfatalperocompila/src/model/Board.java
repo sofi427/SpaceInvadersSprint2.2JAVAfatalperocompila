@@ -137,5 +137,11 @@ public class Board extends Observable {
             this.timer.cancel();
     	}
     }
+
+    public boolean isInside(int x, int y){
+        if(x>this.LENGTH || x < 0){ return false;}
+        if(y>this.WIDTH || y < 0){ return false;}
+        return true;
+    }
     
 }

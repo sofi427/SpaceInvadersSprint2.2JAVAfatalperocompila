@@ -20,21 +20,52 @@ public class SquareComposite implements Component {
 
     @Override
     public void move(int dx, int dy) {
-        for(Component act: this.children){
-            Square sq = (Square) act;
-            int nx = sq.getPosX() + dx;
-            int ny = sq.getPosY() + dy;
-             if (nx < 0 || nx >= Board.getMyBoard().getWidth()
-             || ny < 0 || ny >= Board.getMyBoard().getHeight()) return;
-            
-             // Aquí se tienen que comprobar las colisiones con otros objetos del tablero, pero eso se haría en el método move de cada clase concreta (Alien, Player...) y no aquí, porque SquareComposite es solo un contenedor de Squares, no tiene lógica de juego. Por lo tanto, aquí simplemente se llama al método move de cada componente hijo, y cada uno se encarga de comprobar sus propias colisiones y límites.
+        
+        for (java.util.Iterator<Component> it = children.iterator(); it.hasNext(); ) {
+            Component comp = it.next();
+
+            Square from = comp.getSquare();
+            int nx = from.getPosX() + dx;
+            int ny = from.getPosY() + dy;
+
+            // Si sale del tablero no se mueve
+            if (Board.getMyBoard().isInside(nx, ny)) {
+                System.out.println("Se ha salido del tablero");
+                return;
+            }
+
+            Square to = Board.getMyBoard().getSquare(nx, ny);
+
+            SquareState originState = from.getState();
+            SquareState targetState = to.getState();
+
+            // --- Colisión: Alien toca Player muere Player y el Alien ocupa la casilla
+            if (originState instanceof AlienState && targetState instanceof PlayerState) {
+                System.out.println("Player muerto");
+                from.setState(new EmptyState());
+                comp.setSquare(to);
+                to.setState(originState);
+                continue;
+            }
+
+            if (originState instanceof ShotState && targetState instanceof AlienState) {
+                System.out.println("Alien eliminado");
+                // El disparo se consume y el alien desaparece del board
+                from.setState(new EmptyState());
+                to.setState(new EmptyState());
+                // El componente que se movía (el shot) ya no existe
+                // No sé cómo eliminar el disparo jeje
+                continue;
+            }
+
+            // Demás combinaciones: si no está vacío, bloquea (no hay movimiento)
+            if (!(targetState instanceof EmptyState)) {
+                continue;
+            }
+
+            from.setState(new EmptyState());
+            comp.setSquare(to);
+            to.setState(originState);
         }
     }
-
-    @Override
-    public List<Component> getChildren() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getChildren'");
-    }
-
 }
