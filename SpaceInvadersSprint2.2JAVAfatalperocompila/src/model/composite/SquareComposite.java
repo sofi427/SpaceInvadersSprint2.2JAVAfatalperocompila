@@ -32,7 +32,8 @@ public class SquareComposite implements Component {
     @Override
     public void move(int dx, int dy) {
         
-        for (Component comp : children) {
+        for (Component act : children) {
+            Square comp = (Square) act;
             Square from = (Square) comp; 
             int nx = from.getPosX() + dx;
             int ny = from.getPosY() + dy;
