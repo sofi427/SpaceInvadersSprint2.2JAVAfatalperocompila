@@ -1,8 +1,7 @@
 package model;
 
+import model.composite.Component;
 import model.composite.Square;
-import model.player.AbstractPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -37,11 +36,13 @@ public class AlienGroup extends Observable{
         return myAlienGroup;
     }
 
-    private boolean noOverlap(Alien newAlien) {    // Aquí el método getSquares ya no existe en Composite, 
-        for (Square newSq : newAlien.getSquares().getSquares()) {  // tendrías que llamar solamente a move creo
+    private boolean noOverlap(Alien newAlien) {  		// mira que los aliens que se crean no coincidan de posiciones con otros
+        for (Component newSq : newAlien.getSquareComposite().getSquares()) { 
             for (Alien existing : aliens) {
-                for (Square existSq : existing.getSquares().getSquares()) {
-                    if (newSq.getPosX() == existSq.getPosX() && newSq.getPosY() == existSq.getPosY())
+                for (Component existSq : existing.getSquareComposite().getSquares()) {
+                	Square newSquare = (Square) newSq;
+                	Square existSquare = (Square) existSq;
+                    if (newSquare.getPosX() == existSquare.getPosX() && newSquare.getPosY() == existSquare.getPosY())
                     {
                         return false;
                     }
@@ -50,7 +51,7 @@ public class AlienGroup extends Observable{
         }
         return true;
     }
-
+    
 
     public boolean hasReachedBottom() {
         for (Alien a : aliens) {

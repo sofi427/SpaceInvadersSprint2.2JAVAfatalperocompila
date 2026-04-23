@@ -46,8 +46,8 @@ public class Shot {
     }
 
     private void moveUp() {
-        for (int i=0; i<squares.getChildren().size(); i++) {
-        	Component sq=squares.getChildren().get(i);
+        for (int i=0; i<squares.getSquares().size(); i++) {
+        	Component sq=squares.getSquares().get(i);
             if (((Square) sq).getPosY()-1 < 0) {
                 destroyShot();
                 return;

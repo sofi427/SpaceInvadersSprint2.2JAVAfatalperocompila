@@ -2,6 +2,8 @@ package model;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
 import model.state.AlienState;
@@ -49,11 +51,12 @@ public class Alien {
         timer.cancel();
     }
     
-    public SquareComposite getSquares() { return squares; }
+    public SquareComposite getSquareComposite() { return squares; }
 
     public int getBottomY() {
         int maxY = 0;
-        for (Square sq : squares.getSquares()) {
+        for (Component squ : squares.getSquares()) {
+        	Square sq = (Square) squ;
             if (sq.getPosY() > maxY) {
                 maxY = sq.getPosY();
             }
