@@ -23,7 +23,7 @@ public class PlayerFactory {
 		}
 		else if (type.equals("Red")) {
 			//myPlayer = new RedPlayer(posX,posY);
-			myPlayer = BluePlayer.getPlayer();
+			myPlayer = RedPlayer.getPlayer();
 		}
 		return myPlayer;
 	}

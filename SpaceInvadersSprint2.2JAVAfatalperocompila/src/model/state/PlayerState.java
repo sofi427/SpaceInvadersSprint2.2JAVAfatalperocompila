@@ -1,12 +1,17 @@
 package model.state;
 
 import java.awt.Color;
-import model.player.AbstractPlayer;
 
 public class PlayerState implements SquareState {
 
+    private final Color color;
+
+    public PlayerState(Color color) {
+        this.color = color;
+    }
+
     @Override
-    public Color getColor() {return AbstractPlayer.getPlayer().getColor();}
+    public Color getColor() {return color;}
 
     @Override
     public boolean isEmpty() {return false; }
@@ -15,14 +20,14 @@ public class PlayerState implements SquareState {
     public String getStateS() {return "PLAYER"; }
 
     @Override
-    public void collideWith(SquareState other) {other.collideWithPlayer();}
+    public String collideWith(SquareState other) {return other.collideWithPlayer();}
     
     @Override
-    public void collideWithAlien() {AbstractPlayer.getPlayer().notifyLost();}
+    public String collideWithAlien() {return gamelost;}
 
     @Override
-    public void collideWithShot() {}
+    public String collideWithShot() {return block;}
 
     @Override
-    public void collideWithPlayer() {}
+    public String collideWithPlayer() {return block;}
 }

@@ -7,6 +7,7 @@ import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
 import java.awt.Color;
+import model.composite.Component; 
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -14,6 +15,8 @@ import java.util.Observable;
 public abstract class AbstractPlayer extends Observable{
 
 	//atributos
+    private static AbstractPlayer instance; //sofinu te pongo la instance aqui
+
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
     private ArrayList<ShotStrategy> strategyList;
@@ -23,6 +26,7 @@ public abstract class AbstractPlayer extends Observable{
 
     //constructora
     protected AbstractPlayer(int centerX, int centerY) {
+    	instance = this; 
         this.squares = makeShape(centerX, centerY);
         this.strategyList = createStrategyList();
         this.strategyIndex = 0;
@@ -30,7 +34,7 @@ public abstract class AbstractPlayer extends Observable{
         this.shots = new ArrayList<Shot>();
     }
 
-    public abstract AbstractPlayer getPlayer(); //DEBERIA SER STATIC???
+    public static AbstractPlayer getPlayer() { return instance; } //si que es static sofinu
     public abstract Color getColor();
     protected abstract SquareComposite makeShape(int x, int y);
     protected abstract ArrayList<ShotStrategy> createStrategyList();
@@ -100,15 +104,15 @@ public abstract class AbstractPlayer extends Observable{
 
  //Para registrar las casillas de player en board
     public void registerOnBoard() {
-        ArrayList<Square> mySquares = squares.getSquares();
+    	ArrayList<Component> mySquares = new ArrayList<Component>();
         squares = new SquareComposite();
-        
-        for (Square sq : mySquares) {
+        for (Component c : mySquares) {
+            Square sq = (Square) c;
             // Obtener el square real del Board
             Square boardSquare = Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY());
             // Copiarle el estado
             boardSquare.setState(sq.getState());
-            // A�adir el square del Board al composite (no el privado)
+            // Aniadir el square del Board al composite (no el privado)
             squares.add(boardSquare);
         }
     }

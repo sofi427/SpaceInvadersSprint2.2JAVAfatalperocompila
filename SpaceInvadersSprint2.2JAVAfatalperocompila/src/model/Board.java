@@ -31,8 +31,6 @@ public class Board extends Observable {
 				squares[row][col] = new Square(col, row);
         
         setChanged();
-        this.notifyObservers("READY");
-
     }
 
     public static Board getMyBoard() {
@@ -46,6 +44,8 @@ public class Board extends Observable {
         this.player = PlayerGenerator.getPlayerGenerator().generatePlayer(type, 50,55);
         this.player.registerOnBoard();
         this.startTimer();
+        setChanged();
+        notifyObservers("READY");
     }
 
     private void startTimer() {

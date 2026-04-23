@@ -2,8 +2,6 @@ package model.state;
 
 import java.awt.Color;
 
-import model.player.AbstractPlayer;
-
 public class AlienState implements SquareState {
 
     @Override
@@ -16,17 +14,14 @@ public class AlienState implements SquareState {
     public String getStateS() {return "ALIEN";}
 
     @Override
-    public void collideWith(SquareState other) {other.collideWithAlien();}
+    public String collideWith(SquareState other) {return other.collideWithAlien();}
 
     @Override
-    public void collideWithPlayer() {AbstractPlayer.getPlayer().notifyLost();}
+    public String collideWithPlayer() {return gamelost;}
 
     @Override
-    public void collideWithShot() {
-        // Aquí tenemos que eliminar el alien, linea con alienmanager??
-    }
+    public String collideWithShot() {return destroyboth;}
 
     @Override
-    public void collideWithAlien() {}
+    public String collideWithAlien() {return block;}
 }
-``

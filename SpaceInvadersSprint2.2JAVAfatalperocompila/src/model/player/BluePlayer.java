@@ -18,8 +18,7 @@ public class BluePlayer extends AbstractPlayer {
         super(centerX, centerY);
     }
 
-    @Override
-    public BluePlayer getPlayer() {
+    public static BluePlayer getPlayer() {
 		if (myBluePlayer == null) {
 			myBluePlayer = new BluePlayer(50,55);
 		}

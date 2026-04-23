@@ -14,16 +14,15 @@ public class ShotState implements SquareState {
     public String getStateS() {return "SHOT";}
 
     @Override
-    public void collideWith(SquareState other) {other.collideWithShot();}
+    public String collideWith(SquareState other) {return other.collideWithShot();}
 
     @Override
-    public void collideWithAlien() {
-        //Aqui deberia desaparecer el disparo
-    }
+    public String collideWithAlien() {return destroyboth;}
 
     @Override
-    public void collideWithShot() {}
+    public String collideWithShot() {return block;}
 
     @Override
-    public void collideWithPlayer() {}
+    public String collideWithPlayer() {return block;}
 }
+

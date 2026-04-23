@@ -104,16 +104,10 @@ public class GameScreen extends JFrame implements Observer {
         }
     }
     
-    //Coger el color del player e inmediatamente debajo el metodo para repintar la matriz
-    private Color colorPlayer() {
-    	if (Board.getMyBoard().getPlayerType().equals("Blue")) { return Color.BLUE;}
-    	else if(Board.getMyBoard().getPlayerType().equals("Red")) { return Color.RED;}
-    	else return Color.green;
-    }
     private void refreshMatrix(int[][] matrix) {
         for (int row = 0; row < 60; row++) {
             for (int col = 0; col < 100; col++) {
-            	if (matrix[row][col]==1) {pixelMatrix[row][col].setBackground(colorPlayer());}
+            	if (matrix[row][col]==1) {pixelMatrix[row][col].setBackground(AbstractPlayer.getPlayer().getColor());}
             	else if (matrix[row][col]==2) {pixelMatrix[row][col].setBackground(Color.MAGENTA);}
 				else if (matrix[row][col]==3) {pixelMatrix[row][col].setBackground(Color.YELLOW);}
 				else {pixelMatrix[row][col].setBackground(Color.BLACK);}
@@ -149,18 +143,18 @@ public class GameScreen extends JFrame implements Observer {
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_A) {
-                Board.getMyBoard().movePlayerLeft();
+                AbstractPlayer.getPlayer().moveLeft();
             } else if (key == KeyEvent.VK_D) {
-                Board.getMyBoard().movePlayerRight();
+            	AbstractPlayer.getPlayer().moveRight();
             } else if (key == KeyEvent.VK_W) {
-                Board.getMyBoard().movePlayerUp();
+            	AbstractPlayer.getPlayer().moveUp();
             } else if (key == KeyEvent.VK_S) {
-                Board.getMyBoard().movePlayerDown();
+            	AbstractPlayer.getPlayer().moveDown();
             } else if (key == KeyEvent.VK_SPACE) {
-                Board.getMyBoard().shoot();
+            	AbstractPlayer.getPlayer().shoot();
             } else if (key == KeyEvent.VK_M) {
-                Board.getMyBoard().changePlayerStrategy();
-            }
+            	//AbstractPlayer.getPlayer().changeStrategy();             
+            	}
         }
 
         @Override public void keyTyped(KeyEvent e) {}

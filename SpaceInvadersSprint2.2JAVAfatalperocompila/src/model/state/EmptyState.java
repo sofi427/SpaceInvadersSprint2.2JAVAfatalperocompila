@@ -8,8 +8,8 @@ public class EmptyState implements SquareState {
    public boolean isEmpty()   { return true; }
    public String  getStateS() { return "Empty"; }
 
-   public void collideWith(SquareState coli) { }
-   public void collideWithAlien()  { }
-   public void collideWithShot()   { }
-   public void collideWithPlayer() { }
+   public String collideWith(SquareState coli) { return block; }
+   public String collideWithAlien()  { return move; }
+   public String collideWithShot()   { return move; }
+   public String collideWithPlayer() { return move; }
 }

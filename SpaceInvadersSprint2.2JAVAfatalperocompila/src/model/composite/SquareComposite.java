@@ -29,12 +29,11 @@ public class SquareComposite implements Component {
     }
 
 
-    @Override
+    @Override //mario te he cambiado las instancias x los states
     public void move(int dx, int dy) {
         
-        for (Component act : children) {
-            Square comp = (Square) act;
-            Square from = (Square) comp; 
+        for (int i = 0; i < children.size(); i++) {
+            Square from = (Square) children.get(i);
             int nx = from.getPosX() + dx;
             int ny = from.getPosY() + dy;
 
@@ -48,35 +47,35 @@ public class SquareComposite implements Component {
 
             SquareState originState = from.getState();
             SquareState targetState = to.getState();
+            String result = originState.collideWith(targetState);
 
             // Colisión: Alien toca Player muere Player y el Alien ocupa la casilla
-            if (originState instanceof AlienState && targetState instanceof PlayerState) {
-                System.out.println("Player muerto");
+            if (result.equals(SquareState.move)) {                
+            	System.out.println("Player muerto");
                 from.setState(new EmptyState());
-                comp.setSquare(to);
+                children.set(i, to);
                 to.setState(originState);
-                Board.getMyBoard().gameLost();
                 continue;
             }
 
-            if (originState instanceof ShotState && targetState instanceof AlienState) {
+            if (result.equals(SquareState.destroyboth)) {
                 System.out.println("Alien eliminado");
                 // El disparo se consume y el alien desaparece del board
                 from.setState(new EmptyState());
                 to.setState(new EmptyState());
                 // El componente que se movía (el shot) ya no existe
                 // No sé cómo eliminar el disparo jeje
-                continue;
+                return;
             }
 
             // Demás combinaciones: si no está vacío, bloquea (no hay movimiento)
-            if (!(targetState instanceof EmptyState)) {
-                continue;
+            if (result.equals(SquareState.gamelost)) {
+            	from.setState(new EmptyState());
+                to.setState(originState);
+                Board.getMyBoard().gameLost();
+                return;
             }
 
-            from.setState(new EmptyState());
-            comp.setSquare(to);
-            to.setState(originState);
         }
     }
 
