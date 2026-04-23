@@ -1,7 +1,14 @@
 package model.composite;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import model.state.AlienState;
+import model.state.EmptyState;
+import model.state.PlayerState;
+import model.state.ShotState;
+import model.state.SquareState;
+import model.composite.Square;
+
 import model.Board;
 
 
@@ -21,10 +28,8 @@ public class SquareComposite implements Component {
     @Override
     public void move(int dx, int dy) {
         
-        for (java.util.Iterator<Component> it = children.iterator(); it.hasNext(); ) {
-            Component comp = it.next();
-
-            Square from = comp.getSquare();
+        for (Component comp : children) {
+            Square from = (Square) comp; 
             int nx = from.getPosX() + dx;
             int ny = from.getPosY() + dy;
 
@@ -39,7 +44,7 @@ public class SquareComposite implements Component {
             SquareState originState = from.getState();
             SquareState targetState = to.getState();
 
-            // --- Colisión: Alien toca Player muere Player y el Alien ocupa la casilla
+            // Colisión: Alien toca Player muere Player y el Alien ocupa la casilla
             if (originState instanceof AlienState && targetState instanceof PlayerState) {
                 System.out.println("Player muerto");
                 from.setState(new EmptyState());
