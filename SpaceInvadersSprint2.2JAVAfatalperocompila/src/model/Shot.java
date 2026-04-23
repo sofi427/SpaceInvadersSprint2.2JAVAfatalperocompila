@@ -3,6 +3,7 @@ package model;
 import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
+import model.player.AbstractPlayer;
 import model.strategy.ShotStrategy;
 
 import java.util.Timer;
@@ -54,7 +55,8 @@ public class Shot {
             }
         }
         squares.move(0, -1);
-        Board.getMyBoard().onShotMoved(this);
+        //Board.getMyBoard().onShotMoved(this);
+        AbstractPlayer.getPlayer().shotMoved(this);
     }
 
     public void destroyShot() {

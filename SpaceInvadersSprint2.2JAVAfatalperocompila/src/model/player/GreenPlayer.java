@@ -19,12 +19,16 @@ public class GreenPlayer extends AbstractPlayer {
     }
 
     @Override
-    public GreenPlayer getPlayer(int centerX, int centerY) {
+    public GreenPlayer getPlayer() {
 		if (myGreenPlayer == null) {
-			myGreenPlayer = new GreenPlayer(centerX, centerY);
+			myGreenPlayer = new GreenPlayer(50,55);
 		}
 		return myGreenPlayer;
 	}
+    
+    @Override
+    public Color getColor()
+    { return Color.GREEN; }
     
     @Override
     protected SquareComposite makeShape(int x, int y) {

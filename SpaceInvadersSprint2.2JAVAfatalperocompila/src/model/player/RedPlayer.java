@@ -20,12 +20,16 @@ public class RedPlayer extends AbstractPlayer {
     }
 
     @Override
-    public RedPlayer getPlayer(int centerX, int centerY) {
+    public RedPlayer getPlayer() {
 		if (myRedPlayer == null) {
-			myRedPlayer = new RedPlayer(centerX, centerY);
+			myRedPlayer = new RedPlayer(50,55);
 		}
 		return myRedPlayer;
 	}
+    
+    @Override
+    public Color getColor()
+    { return Color.RED; }
     
     @Override
     protected SquareComposite makeShape(int x, int y) {

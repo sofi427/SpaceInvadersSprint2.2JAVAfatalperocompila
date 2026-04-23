@@ -1,6 +1,7 @@
 package view;
 
 import model.Board;
+import model.player.AbstractPlayer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -49,6 +50,7 @@ public class GameScreen extends JFrame implements Observer {
         requestFocusInWindow();
         //Aniadimos observer a gamescreen
         Board.getMyBoard().addObserver(this);
+        AbstractPlayer.getPlayer().addObserver(this);
     }
 
 

@@ -1,10 +1,12 @@
 package model.player;
 
 import model.Board;
+import model.Shot;
 import model.composite.Square;
 import model.composite.SquareComposite;
 import model.strategy.ShotStrategy;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -12,12 +14,12 @@ import java.util.Observable;
 public abstract class AbstractPlayer extends Observable{
 
 	//atributos
-	private static AbstractPlayer myPlayer;
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
     private ArrayList<ShotStrategy> strategyList;
     private int strategyIndex;
-    private boolean gameLost;
+    private ArrayList<Shot> shots;
+    //private boolean gameLost;
 
     //constructora
     protected AbstractPlayer(int centerX, int centerY) {
@@ -25,21 +27,55 @@ public abstract class AbstractPlayer extends Observable{
         this.strategyList = createStrategyList();
         this.strategyIndex = 0;
         this.currentStrategy = strategyList.get(0);
+        this.shots = new ArrayList<Shot>();
     }
 
-    protected abstract AbstractPlayer getPlayer(int centerX, int centerY);
+    public abstract AbstractPlayer getPlayer(); //DEBERIA SER STATIC???
+    public abstract Color getColor();
     protected abstract SquareComposite makeShape(int x, int y);
     protected abstract ArrayList<ShotStrategy> createStrategyList();
     public abstract String getType();
 
     //movimientos
-    public void moveLeft() { squares.move(-1,  0); }
-    public void moveRight() { squares.move( 1,  0); }
-    public void moveUp() { squares.move( 0, -1); }
-    public void moveDown() { squares.move( 0,  1); }
+    public void moveLeft() {
+    	squares.move(-1,  0);
+    	this.setChanged();
+    	this.notifyObservers();
+    }
+    public void moveRight() {
+    	squares.move( 1,  0);
+    	this.setChanged();
+    	this.notifyObservers();
+    }
+    public void moveUp() {
+    	squares.move( 0, -1);
+    	this.setChanged();
+    	this.notifyObservers();
+    }
+    public void moveDown() {
+    	squares.move( 0,  1);
+    	this.setChanged();
+    	this.notifyObservers();
+    }
 
     
     //metodos de disparo
+    public void shoot() {
+    	if (canShootCurrentStrategy())
+    	{
+    		ShotStrategy newShotStrategy = strategyList.get(strategyIndex);
+    		//AQUI NECESITO METODO PARA CONSEGUIR LA X,Y CENTRAS DE SQUARES, Y +2
+    		Shot newShot = new Shot(newShotStrategy, 2, 2);
+    		newShot.startMoving();
+    		this.shots.add(newShot);
+    		this.consumeShot();
+    	}
+    }
+    
+    public void shotMoved(Shot shot) {
+    	this.setChanged();
+    	this.notifyObservers();
+    }
     
     public void nextStrategy() {
         if (strategyIndex + 1 >= strategyList.size())
@@ -60,11 +96,9 @@ public abstract class AbstractPlayer extends Observable{
         currentStrategy.consumeShot();
     }
     
-    public void shoot() {
-    	
-    }
 
- //Para registrar las casills de player en board
+
+ //Para registrar las casillas de player en board
     public void registerOnBoard() {
         ArrayList<Square> mySquares = squares.getSquares();
         squares = new SquareComposite();
@@ -79,7 +113,15 @@ public abstract class AbstractPlayer extends Observable{
         }
     }
     
+    public void notifyLost() {
+		this.setChanged();
+    	this.notifyObservers("LOST");
+	}
+    
+    
     //getters
     public ShotStrategy getCurrentStrategy() { return currentStrategy; }
     public SquareComposite getSquares() { return squares; }
+
+	
 }
