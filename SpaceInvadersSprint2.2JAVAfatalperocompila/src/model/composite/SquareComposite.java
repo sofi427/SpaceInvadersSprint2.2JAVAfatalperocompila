@@ -7,7 +7,7 @@ import model.state.EmptyState;
 import model.state.PlayerState;
 import model.state.ShotState;
 import model.state.SquareState;
-import model.composite.Square;
+
 
 import model.Board;
 
@@ -22,6 +22,10 @@ public class SquareComposite implements Component {
 
     public void add(Component c) {
         children.add(c);
+    } 
+
+    public void remove(Component c) {
+        children.remove(c);
     }
 
 
@@ -50,6 +54,7 @@ public class SquareComposite implements Component {
                 from.setState(new EmptyState());
                 comp.setSquare(to);
                 to.setState(originState);
+                Board.getMyBoard().gameLost();
                 continue;
             }
 

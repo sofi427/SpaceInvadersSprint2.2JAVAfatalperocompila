@@ -3,15 +3,14 @@ package model;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import model.composite.Square;
 import model.player.AbstractPlayer;
 import model.player.PlayerGenerator;
 
 @SuppressWarnings("deprecation")
 public class Board extends Observable {
-    public int LENGTH = 100;
-	private int WIDTH = 60;
+    public final int LENGTH = 100; // Les he puesto final porque so
+	private final int WIDTH = 60;
     private static Board myBoard;
     private Square[][] squares;
     private Timer timer;
@@ -142,6 +141,18 @@ public class Board extends Observable {
         if(x>this.LENGTH || x < 0){ return false;}
         if(y>this.WIDTH || y < 0){ return false;}
         return true;
+    }
+
+    public void gameWon() {
+        this.gameWon = true;
+        setChanged();
+        notifyObservers("WON");
+    }
+
+    public void gameLost() {
+        this.gameLost = true;
+        setChanged();
+        notifyObservers("LOST");
     }
     
 }
