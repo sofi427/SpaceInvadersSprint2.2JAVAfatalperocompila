@@ -1,20 +1,15 @@
 package model.composite;
 
 import java.util.ArrayList;
-
-import model.state.AlienState;
-import model.state.EmptyState;
-import model.state.PlayerState;
-import model.state.ShotState;
-import model.state.SquareState;
-
-
 import model.Board;
+import model.state.EmptyState;
+import model.state.SquareState;
 
 
 public class SquareComposite implements Component {
 
     private ArrayList<Component> children; 
+
 
     public SquareComposite() {
         this.children = new ArrayList<>();
@@ -76,10 +71,32 @@ public class SquareComposite implements Component {
                 return;
             }
 
+            
+
         }
     }
 
     public ArrayList<Component> getSquares() {
         return children;
+    }
+
+    public Square getCenterSquare() { // El método creo que está hecho pero cuidado porque alomejor al moverse no se actualiza
+
+        int maxX = -1;
+        int maxY = -1;
+        int minX = -1;
+        int minY = -1;
+
+        for (Component c : children) {
+            Square actSquare = (Square) c;
+            int actX = actSquare.getPosX();
+            int actY = actSquare.getPosY();
+            if(maxX < actX || maxX == -1) { maxX = actX; }
+            if(maxY < actY || maxY == -1) { maxY = actY; }
+            if(minX > actX || minX== -1) { minX = actX; }
+            if(minY > actY || minY == -1) { minY = actY;}
+        }
+
+        return Board.getMyBoard().getSquare((maxX+minX)/2, (maxY+minY)/2);
     }
 }
