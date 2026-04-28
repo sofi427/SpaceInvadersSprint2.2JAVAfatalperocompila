@@ -2,6 +2,8 @@ package model.state;
 
 import java.awt.Color;
 
+import model.Board;
+
 public class PlayerState implements SquareState {
 
     private final Color color;
@@ -20,14 +22,9 @@ public class PlayerState implements SquareState {
     public String getStateS() {return "PLAYER"; }
 
     @Override
-    public String collideWith(SquareState other) {return other.collideWithPlayer();}
-    
-    @Override
-    public String collideWithAlien() {return gamelost;}
-
-    @Override
-    public String collideWithShot() {return block;}
-
-    @Override
-    public String collideWithPlayer() {return block;}
+    public String collideWith(SquareState other) {
+        if (other.getStateS().equals("EMPTY")) {return "move";}
+        if (other.getStateS().equals("ALIEN")) {Board.getMyBoard().gameLost();}
+        return "notmove";
+    }
 }

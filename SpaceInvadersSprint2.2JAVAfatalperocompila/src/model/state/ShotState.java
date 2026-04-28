@@ -14,15 +14,10 @@ public class ShotState implements SquareState {
     public String getStateS() {return "SHOT";}
 
     @Override
-    public String collideWith(SquareState other) {return other.collideWithShot();}
-
-    @Override
-    public String collideWithAlien() {return destroyboth;}
-
-    @Override
-    public String collideWithShot() {return block;}
-
-    @Override
-    public String collideWithPlayer() {return block;}
+    public String collideWith(SquareState other) {
+        if (other.getStateS().equals("EMPTY")) {return "move";}
+        if (other.getStateS().equals("ALIEN")) {return "destroyboth";}
+        return "notmove";
+    }
 }
 
