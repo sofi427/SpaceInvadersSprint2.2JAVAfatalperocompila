@@ -3,13 +3,13 @@ package model.composite;
 import java.util.ArrayList;
 import model.AlienGroup;
 import model.Board;
+import model.state.AlienState;
 import model.state.EmptyState;
 import model.state.SquareState;
 
 
 public class SquareComposite implements Component {
 
-    @SuppressWarnings("FieldMayBeFinal")
     private ArrayList<Component> children; 
 
 
@@ -30,65 +30,109 @@ public class SquareComposite implements Component {
     @Override
     public void move(int dx, int dy) {
         
-ArrayList<Component> current = new ArrayList<>(this.children);
 
-    ArrayList<Square> target = new ArrayList<>();
-    ArrayList<SquareState> originStates = new ArrayList<>();
-    ArrayList<String> results = new ArrayList<>();
+        ArrayList<Component> current = new ArrayList<>(this.children);
 
-    for (Component c : current) {
-        Square from = (Square) c;
+        ArrayList<Square> target = new ArrayList<>();
+        ArrayList<SquareState> originStates = new ArrayList<>();
+        ArrayList<SquareState> oldTargetStates = new ArrayList<>();
+        ArrayList<String> results = new ArrayList<>();
 
-        int nx = from.getPosX() + dx;
-        int ny = from.getPosY() + dy;
+        // (Opcional pero recomendable) para no llamar 2 veces al mismo alien si 2 partes chocan con él
+        java.util.HashSet<String> aliensRemoved = new java.util.HashSet<>();
 
-        if (nx < 0 || nx >= Board.getMyBoard().getWidth()
-                || ny < 0 || ny >= Board.getMyBoard().getHeight()) {
-            return;
+        // ---------- FASE 1: planificar (sin modificar el board) ----------
+        for (Component comp : current) {
+            Square from = (Square) comp;
+
+            int nx = from.getPosX() + dx;
+            int ny = from.getPosY() + dy;
+
+            // límites
+            if (nx < 0 || nx >= Board.getMyBoard().getWidth()
+                    || ny < 0 || ny >= Board.getMyBoard().getHeight()) {
+                return; // cancelas movimiento completo
+            }
+
+            Square dest = Board.getMyBoard().getSquare(nx, ny);
+
+            SquareState origin = from.getState();
+            SquareState oldDestState = dest.getState(); // guardo lo que había ANTES
+
+            // Si el destino es una casilla del propio shot (otra parte del mismo composite),
+            // entonces para colisión lo tratamos como vacío (se va a vaciar en la fase 2)
+            SquareState effectiveTarget =
+                    isInCurrentByPosition(current, dest) ? new EmptyState() : oldDestState;
+
+            String result = origin.collideWith(effectiveTarget);
+
+            if ("notmove".equals(result)) {
+                return; // nadie se mueve
+            }
+
+            // evita que 2 casillas del shot intenten ir al mismo destino
+            if (target.contains(dest)) {
+                return;
+            }
+
+            target.add(dest);
+            originStates.add(origin);
+            oldTargetStates.add(oldDestState);
+            results.add(result);
         }
 
-        Square dest = Board.getMyBoard().getSquare(nx, ny);
-
-        SquareState originState = from.getState();
-
-        SquareState effectiveTargetState =
-                isInCurrentByPosition(current, dest) ? new EmptyState() : dest.getState();
-
-        String result = originState.collideWith(effectiveTargetState);
-
-        if ("notmove".equals(result)) {
-            return;
+        // ---------- FASE 2: vaciar orígenes ----------
+        for (Component comp : current) {
+            ((Square) comp).changeState(new EmptyState());
         }
 
-        if (target.contains(dest)) {
-            return;
-        }
-
-        target.add(dest);
-        originStates.add(originState);
-        results.add(result);
-        }
-
-        for (Component c : current) {
-            ((Square) c).changeState(new EmptyState());
-        }
-
+        // ---------- FASE 3: aplicar resultados por casilla ----------
         for (int i = 0; i < target.size(); i++) {
             Square dest = target.get(i);
+            String result = results.get(i);
 
-            switch (results.get(i)) {
-                case "move" -> dest.changeState(originStates.get(i));
-                case "destroyboth" -> AlienGroup.getAlienGroup().removeAlienAt(dest.getPosX(), dest.getPosY());
-                default -> { /* si llega algo raro, no hacemos nada */ }
+            SquareState origin = originStates.get(i);
+            SquareState oldDestState = oldTargetStates.get(i);
+
+            switch (result) {
+
+                case "move" -> {
+                    dest.changeState(origin);
+                }
+
+                case "destroyboth" -> {
+                    // Si en el destino había alien, eliminarlo del alienGroup por coordenadas
+                    if (oldDestState instanceof AlienState) {
+                        String k = dest.getPosX() + "," + dest.getPosY();
+                        if (!aliensRemoved.contains(k)) {
+                            aliensRemoved.add(k);
+                            AlienGroup.getAlienGroup().removeAlienAt(dest.getPosX(), dest.getPosY());
+                        }
+                    }
+
+                    // El shot también desaparece en esa casilla
+                    dest.changeState(new EmptyState());
+                }
+
+                default -> {
+                    // Si aparece algo inesperado, por seguridad no hacemos nada.
+                }
             }
         }
+
 
         this.children.clear();
         for (int i = 0; i < target.size(); i++) {
-            if (!"destroyboth".equals(results.get(i))) {
+            if ("move".equals(results.get(i))) {
                 this.children.add(target.get(i)); // Square es Component
             }
+            // si destroyboth => esa parte del shot desaparece
         }
+
+        // Si no quedan casillas, el shot ha muerto (ya no se moverá)
+        // (si tienes un flag active/alive, aquí lo marcas)
+        // if (this.children.isEmpty()) this.alive = false;
+
     }
 
     private boolean isInCurrentByPosition(ArrayList<Component> current, Square dest) {
