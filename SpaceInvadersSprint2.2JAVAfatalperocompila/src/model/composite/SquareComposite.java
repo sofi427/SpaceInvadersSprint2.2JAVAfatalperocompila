@@ -38,8 +38,7 @@ public class SquareComposite implements Component {
         ArrayList<SquareState> oldTargetStates = new ArrayList<>();
         ArrayList<String> results = new ArrayList<>();
 
-        // (Opcional pero recomendable) para no llamar 2 veces al mismo alien si 2 partes chocan con él
-        java.util.HashSet<String> aliensRemoved = new java.util.HashSet<>();
+        java.util.HashSet<String> aliensRemoved = new java.util.HashSet<>();  // no quiero usar hashset pero es para evitar eliminar el mismo alien 2 veces si el shot tiene varias casillas y colisiona con el mismo alien en varias de ellas
 
         // ---------- FASE 1: planificar (sin modificar el board) ----------
         for (Component comp : current) {
