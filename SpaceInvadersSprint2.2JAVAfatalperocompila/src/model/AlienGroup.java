@@ -1,12 +1,12 @@
 package model;
 
-import model.composite.Component;
-import model.composite.Square;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import model.composite.Component;
+import model.composite.Square;
 
 public class AlienGroup{
 
@@ -88,4 +88,21 @@ public class AlienGroup{
     public void    remove(Alien a)   { aliens.remove(a); }
     public boolean isEmpty()         { return aliens.isEmpty(); }
     public List<Alien> getAliens()   { return aliens; }
+
+    private Alien getAlienAt(int x, int y) {
+        for (Alien a : aliens) {
+            if (a.containsSquare(x, y)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public void removeAlienAt(int x, int y) {
+        Alien a = getAlienAt(x, y);
+        a.turnSquaresToEmpty(); 
+        if (a != null) {
+            aliens.remove(a);
+        }
+    }
 }

@@ -43,6 +43,10 @@ public class Alien {
 	}
     
     public SquareComposite getSquareComposite() { return squares; }
+    
+    public void turnSquaresToEmpty() {
+    	this.squares.turnEmpty();		
+    }
 
     public int getBottomY() {
         int maxY = 0;
@@ -53,5 +57,15 @@ public class Alien {
             }
         }
         return maxY;
+    }
+
+    public boolean containsSquare(int x, int y) {
+        for (Component c : squares.getSquares()) {
+            Square s = (Square) c;
+            if (s.getPosX() == x && s.getPosY() == y) {
+                return true;
+            }
+        }
+        return false;
     }
 }

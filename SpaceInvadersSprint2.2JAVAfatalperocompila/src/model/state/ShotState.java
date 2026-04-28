@@ -15,8 +15,8 @@ public class ShotState implements SquareState {
 
     @Override
     public String collideWith(SquareState other) {
-        if (other.getStateS().equals("EMPTY")) {return "move";}
-        if (other.getStateS().equals("ALIEN")) {return "destroyboth";}
+        if (other.getStateS().equalsIgnoreCase("Empty")) {return "move";}
+        if (other.getStateS().equalsIgnoreCase("ALIEN")) {return "destroyboth";}
         return "notmove";
     }
 }

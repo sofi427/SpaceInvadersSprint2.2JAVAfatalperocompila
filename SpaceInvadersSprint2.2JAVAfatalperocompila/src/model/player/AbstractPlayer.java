@@ -39,17 +39,17 @@ public abstract class AbstractPlayer{
 
     //movimientos
     public void moveLeft() {
-    	squares.move(-1,  0);
+    	this.squares.move( -1,  0);
 
     }
     public void moveRight() {
-    	squares.move( 1,  0);
+    	this.squares.move( 1,  0);
     }
     public void moveUp() {
     	squares.move( 0, -1);
     }
     public void moveDown() {
-    	squares.move( 0,  1);
+    	this.squares.move( 0,  1);
 
     }
     

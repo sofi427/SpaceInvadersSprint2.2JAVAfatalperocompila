@@ -1,6 +1,7 @@
 package model.composite;
 
 import java.util.ArrayList;
+import model.AlienGroup;
 import model.Board;
 import model.state.EmptyState;
 import model.state.SquareState;
@@ -24,61 +25,86 @@ public class SquareComposite implements Component {
     }
 
 
-    @Override //mario te he cambiado las instancias x los states
+    
+    @Override
     public void move(int dx, int dy) {
         
-        for (int i = 0; i < children.size(); i++) {
-            Square from = (Square) children.get(i);
-            int nx = from.getPosX() + dx;
-            int ny = from.getPosY() + dy;
+ArrayList<Component> current = new ArrayList<>(this.children);
 
-            // Si sale del tablero no se mueve
-            if (!Board.getMyBoard().isInside(nx, ny)) {
-                System.out.println("Se ha salido del tablero");
-                return;
+    ArrayList<Square> target = new ArrayList<>();
+    ArrayList<SquareState> originStates = new ArrayList<>();
+    ArrayList<String> results = new ArrayList<>();
+
+    for (Component c : current) {
+        Square from = (Square) c;
+
+        int nx = from.getPosX() + dx;
+        int ny = from.getPosY() + dy;
+
+        if (nx < 0 || nx >= Board.getMyBoard().getWidth()
+                || ny < 0 || ny >= Board.getMyBoard().getHeight()) {
+            return;
+        }
+
+        Square dest = Board.getMyBoard().getSquare(nx, ny);
+
+        SquareState originState = from.getState();
+
+        SquareState effectiveTargetState =
+                isInCurrentByPosition(current, dest) ? new EmptyState() : dest.getState();
+
+        String result = originState.collideWith(effectiveTargetState);
+
+        if ("notmove".equals(result)) {
+            return;
+        }
+
+        if (target.contains(dest)) {
+            return;
+        }
+
+        target.add(dest);
+        originStates.add(originState);
+        results.add(result);
+        }
+
+        for (Component c : current) {
+            ((Square) c).changeState(new EmptyState());
+        }
+
+        for (int i = 0; i < target.size(); i++) {
+            Square dest = target.get(i);
+
+            switch (results.get(i)) {
+                case "move" -> dest.changeState(originStates.get(i));
+                case "destroyboth" -> AlienGroup.getAlienGroup().removeAlienAt(dest.getPosX(), dest.getPosY());
+                default -> { /* si llega algo raro, no hacemos nada */ }
             }
+        }
 
-            Square to = Board.getMyBoard().getSquare(nx, ny);
-
-            SquareState originState = from.getState();
-            SquareState targetState = to.getState();
-            String result = originState.collideWith(targetState);
-
-            // Colisión: Alien toca Player muere Player y el Alien ocupa la casilla
-            if (result.equals(SquareState.move)) {                
-            	System.out.println("Player muerto");
-                from.setState(new EmptyState());
-                children.set(i, to);
-                to.setState(originState);
-                continue;
+        this.children.clear();
+        for (int i = 0; i < target.size(); i++) {
+            if (!"destroyboth".equals(results.get(i))) {
+                this.children.add(target.get(i)); // Square es Component
             }
-
-            if (result.equals(SquareState.destroyboth)) {
-                System.out.println("Alien eliminado");
-                // El disparo se consume y el alien desaparece del board
-                from.setState(new EmptyState());
-                to.setState(new EmptyState());
-                // El componente que se movía (el shot) ya no existe
-                // No sé cómo eliminar el disparo jeje
-                return;
-            }
-
-            // Demás combinaciones: si no está vacío, bloquea (no hay movimiento)
-            if (result.equals(SquareState.gamelost)) {
-            	from.setState(new EmptyState());
-                to.setState(originState);
-                Board.getMyBoard().gameLost();
-                return;
-            }
-
-            
-
         }
     }
+
+    private boolean isInCurrentByPosition(ArrayList<Component> current, Square dest) {
+        for (Component c : current) {
+            Square s = (Square) c;
+            if (s.getPosX() == dest.getPosX() && s.getPosY() == dest.getPosY()) {
+                return true;
+            }
+        }
+        return false;
+}
+
 
     public ArrayList<Component> getSquares() {
         return children;
     }
+
 
     public Square getCenterSquare() { // El método creo que está hecho pero cuidado porque alomejor al moverse no se actualiza
 
@@ -98,5 +124,12 @@ public class SquareComposite implements Component {
         }
 
         return Board.getMyBoard().getSquare((maxX+minX)/2, (maxY+minY)/2);
+    }
+
+    public void turnEmpty() {
+        for (Component c : children) {
+            Square s = (Square) c;
+            s.changeState(new EmptyState());
+        }
     }
 }

@@ -9,6 +9,6 @@ public class EmptyState implements SquareState {
    public String  getStateS() { return "Empty"; }
 
    public String collideWith(SquareState other) {
-	return "notmove"; //por completar y que devuelva algo, una casilla vacia nunca se mueve}
+	return "move"; //por completar y que devuelva algo, una casilla vacia nunca se mueve}
   }
 }

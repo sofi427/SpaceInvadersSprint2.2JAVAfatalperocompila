@@ -1,7 +1,6 @@
 package model.state;
 
 import java.awt.Color;
-
 import model.Board;
 
 public class PlayerState implements SquareState {
@@ -23,8 +22,8 @@ public class PlayerState implements SquareState {
 
     @Override
     public String collideWith(SquareState other) {
-        if (other.getStateS().equals("EMPTY")) {return "move";}
-        if (other.getStateS().equals("ALIEN")) {Board.getMyBoard().gameLost();}
+        if (other.getStateS().equalsIgnoreCase("Empty")) {return "move";}
+        if (other.getStateS().equalsIgnoreCase("ALIEN")) {Board.getMyBoard().gameLost();}
         return "notmove";
     }
 }
