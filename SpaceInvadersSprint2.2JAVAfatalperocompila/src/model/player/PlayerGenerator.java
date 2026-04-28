@@ -12,8 +12,8 @@ public class PlayerGenerator {
 		return myPlayerGenerator;
 	}
 	
-	public AbstractPlayer generatePlayer (String type, int posX, int posY) {
-		AbstractPlayer myPlayer = PlayerFactory.getPlayerFactory().generatePlayer(type,posX,posY);
+	public AbstractPlayer generatePlayer (String type) {
+		AbstractPlayer myPlayer = PlayerFactory.getPlayerFactory().generatePlayer(type);
 		return myPlayer;
 	}
 }

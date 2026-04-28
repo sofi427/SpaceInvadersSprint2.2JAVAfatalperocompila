@@ -33,7 +33,7 @@ public class SquareComposite implements Component {
             int ny = from.getPosY() + dy;
 
             // Si sale del tablero no se mueve
-            if (Board.getMyBoard().isInside(nx, ny)) {
+            if (!Board.getMyBoard().isInside(nx, ny)) {
                 System.out.println("Se ha salido del tablero");
                 return;
             }

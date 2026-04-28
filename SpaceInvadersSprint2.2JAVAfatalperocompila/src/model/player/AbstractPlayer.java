@@ -13,14 +13,13 @@ import java.util.ArrayList;
 public abstract class AbstractPlayer{
 
 	//atributos
-    private static AbstractPlayer instance; //sofinu te pongo la instance aqui
+    private static AbstractPlayer instance;
 
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
     private ArrayList<ShotStrategy> strategyList;
     private int strategyIndex;
     private ArrayList<Shot> shots;
-    //private boolean gameLost;
 
     //constructora
     protected AbstractPlayer(int centerX, int centerY) {
@@ -59,8 +58,8 @@ public abstract class AbstractPlayer{
     	if (canShootCurrentStrategy())
     	{
     		ShotStrategy newShotStrategy = strategyList.get(strategyIndex);
-    		//AQUI NECESITO METODO PARA CONSEGUIR LA X,Y CENTRAS DE SQUARES, Y +2
-    		Shot newShot = new Shot(newShotStrategy, 2, 2);
+    		Square centre = this.squares.getCenterSquare();
+    		Shot newShot = new Shot(newShotStrategy, centre.getPosX(), centre.getPosY()-2);
     		newShot.startMoving();
     		this.shots.add(newShot);
     		this.consumeShot();
@@ -90,7 +89,7 @@ public abstract class AbstractPlayer{
 
  //Para registrar las casillas de player en board
     public void registerOnBoard() {
-    	ArrayList<Component> original = squares.getSquares();
+    	ArrayList<Component> original = new ArrayList<>(squares.getSquares()); //es una copia de las casillas
         SquareComposite boardSquares = new SquareComposite();
         for (Component c : original) {
             Square sq = (Square) c;
@@ -99,14 +98,10 @@ public abstract class AbstractPlayer{
             // Copiarle el estado
             boardSquare.changeState(sq.getState());
             // Aniadir el square del Board al composite (no el privado)
-            squares.add(boardSquare);
+            boardSquares.add(boardSquare);
         }
         squares = boardSquares;
     }
-    
-    public void notifyLost() {
-
-	}
     
     
     //getters

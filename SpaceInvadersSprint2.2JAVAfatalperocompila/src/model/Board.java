@@ -36,7 +36,7 @@ public class Board extends Observable {
 
     public void initializeBoard(String type){
         this.initializeSquares();
-        PlayerGenerator.getPlayerGenerator().generatePlayer(type, 50,55);
+        PlayerGenerator.getPlayerGenerator().generatePlayer(type); //50,55 no se necesitan como parametro
         AbstractPlayer.getPlayer().registerOnBoard();
         AlienGroup.getAlienGroup().generateAliens();
         this.startTimer();
@@ -77,9 +77,10 @@ public class Board extends Observable {
     // Metodo de disparo del jugador
 
     public void shoot(){
-        if(AbstractPlayer.getPlayer().canShootCurrentStrategy()){
+        /*if(AbstractPlayer.getPlayer().canShootCurrentStrategy()){
             AbstractPlayer.getPlayer().consumeShot();
-        }
+        }*/
+        AbstractPlayer.getPlayer().shoot();
     }
    
     // Método que se ejecuta cada 20ms para actualizar el estado del tablero y notificar a los observadores

@@ -140,17 +140,17 @@ public class GameScreen extends JFrame implements Observer {
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_A) {
-                AbstractPlayer.getPlayer().moveLeft();
+                Board.getMyBoard().movePlayerLeft();
             } else if (key == KeyEvent.VK_D) {
-            	AbstractPlayer.getPlayer().moveRight();
+            	Board.getMyBoard().movePlayerRight();
             } else if (key == KeyEvent.VK_W) {
-            	AbstractPlayer.getPlayer().moveUp();
+            	Board.getMyBoard().movePlayerUp();
             } else if (key == KeyEvent.VK_S) {
-            	AbstractPlayer.getPlayer().moveDown();
+            	Board.getMyBoard().movePlayerDown();
             } else if (key == KeyEvent.VK_SPACE) {
-            	AbstractPlayer.getPlayer().shoot();
+            	Board.getMyBoard().shoot();
             } else if (key == KeyEvent.VK_M) {
-            	//AbstractPlayer.getPlayer().changeStrategy();             
+            	Board.getMyBoard().changePlayerStrategy();             
             	}
         }
 

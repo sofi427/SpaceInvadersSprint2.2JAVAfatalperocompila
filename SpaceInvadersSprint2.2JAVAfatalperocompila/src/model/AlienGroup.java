@@ -27,16 +27,17 @@ public class AlienGroup{
     public void generateAliens() {
     	int count = random.nextInt(5) + 4; // 4 a 8 aliens
         int x, y;
+        Alien possible;
         for (int i = 0; i < count; i++) {
-        	Alien possible;
             do {
                 x = random.nextInt(95) + 3;
                 y = random.nextInt(8)  + 2;
                 possible = new Alien(x, y);
             } while (!noOverlap(possible));
-            aliens.add(new Alien(x, y));
+            possible.changeSquaresState();
+            aliens.add(possible);
         }
-        moveEvery350ms();	//un único timer para todos los aliens
+        moveEvery350ms();	//un unico timer para todos los aliens
     }
     
     

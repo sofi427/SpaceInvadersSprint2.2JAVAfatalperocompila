@@ -11,7 +11,7 @@ public class PlayerFactory {
 		return myPlayerFactory;
 	    }
 	
-	public AbstractPlayer generatePlayer(String type, int posX, int posY) {
+	public AbstractPlayer generatePlayer(String type) {
 		AbstractPlayer myPlayer = null;
 		if (type.equals("Green")) {
 			//myPlayer = new GreenPlayer(posX,posY);
