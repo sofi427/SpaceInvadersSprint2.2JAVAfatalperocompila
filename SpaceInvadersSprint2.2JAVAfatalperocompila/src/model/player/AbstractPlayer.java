@@ -9,10 +9,8 @@ import model.strategy.ShotStrategy;
 import java.awt.Color;
 import model.composite.Component; 
 import java.util.ArrayList;
-import java.util.Observable;
 
-@SuppressWarnings("deprecation")
-public abstract class AbstractPlayer extends Observable{
+public abstract class AbstractPlayer{
 
 	//atributos
     private static AbstractPlayer instance; //sofinu te pongo la instance aqui
@@ -43,25 +41,18 @@ public abstract class AbstractPlayer extends Observable{
     //movimientos
     public void moveLeft() {
     	squares.move(-1,  0);
-    	this.setChanged();
-    	this.notifyObservers();
+
     }
     public void moveRight() {
     	squares.move( 1,  0);
-    	this.setChanged();
-    	this.notifyObservers();
     }
     public void moveUp() {
     	squares.move( 0, -1);
-    	this.setChanged();
-    	this.notifyObservers();
     }
     public void moveDown() {
     	squares.move( 0,  1);
-    	this.setChanged();
-    	this.notifyObservers();
-    }
 
+    }
     
     //metodos de disparo
     public void shoot() {
@@ -75,12 +66,7 @@ public abstract class AbstractPlayer extends Observable{
     		this.consumeShot();
     	}
     }
-    
-    public void shotMoved(Shot shot) {
-    	this.setChanged();
-    	this.notifyObservers();
-    }
-    
+      
     public void nextStrategy() {
         if (strategyIndex + 1 >= strategyList.size())
         { strategyIndex = 0; }
@@ -118,8 +104,7 @@ public abstract class AbstractPlayer extends Observable{
     }
     
     public void notifyLost() {
-		this.setChanged();
-    	this.notifyObservers("LOST");
+
 	}
     
     

@@ -11,6 +11,10 @@ public class Alien {
 
     public Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
+        for (int i=0; i<squares.getSquares().size(); i++) {		// al crearse el alien cambia el estado de las casillas que ocupa
+        	Component sq=squares.getSquares().get(i);
+        	((Square)sq).changeState(new AlienState());
+        }
     }
 
     private SquareComposite makeShape(int x, int y) {

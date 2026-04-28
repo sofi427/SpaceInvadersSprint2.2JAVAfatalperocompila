@@ -15,7 +15,16 @@ public class AlienGroup{
     private Random random = new Random();
     private Timer timer;
 
-    public AlienGroup() {
+    private AlienGroup() {}
+
+    public static AlienGroup getAlienGroup() {
+        if (myAlienGroup == null) {
+            myAlienGroup = new AlienGroup();
+        }
+        return myAlienGroup;
+    }
+    
+    public void generateAliens() {
     	int count = random.nextInt(5) + 4; // 4 a 8 aliens
         int x, y;
         for (int i = 0; i < count; i++) {
@@ -28,17 +37,9 @@ public class AlienGroup{
             aliens.add(new Alien(x, y));
         }
         moveEvery350ms();	//un único timer para todos los aliens
-
-    }
-
-    public static AlienGroup getAlienGroup() {
-        if (myAlienGroup == null) {
-            myAlienGroup = new AlienGroup();
-        }
-        return myAlienGroup;
     }
     
-
+    
     private void moveEvery350ms()
 	{
 		timer = new Timer();

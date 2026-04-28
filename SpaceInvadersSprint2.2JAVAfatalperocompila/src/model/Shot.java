@@ -4,6 +4,7 @@ import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
 import model.player.AbstractPlayer;
+import model.state.ShotState;
 import model.strategy.ShotStrategy;
 
 import java.util.Timer;
@@ -20,6 +21,10 @@ public class Shot {
         this.strategy = strategy;
         this.squares = strategy.buildShape(startX, startY);
         this.active = true;
+        for (int i=0; i<squares.getSquares().size(); i++) {		// al crearse el disparo cambia el estado de las casillas que ocupa
+        	Component sq=squares.getSquares().get(i);
+        	((Square)sq).changeState(new ShotState());
+        }
     }
 
     public ShotStrategy getStrategy(){ 
@@ -55,8 +60,6 @@ public class Shot {
             }
         }
         squares.move(0, -1);
-        //Board.getMyBoard().onShotMoved(this);
-        AbstractPlayer.getPlayer().shotMoved(this);
     }
 
     public void destroyShot() {
