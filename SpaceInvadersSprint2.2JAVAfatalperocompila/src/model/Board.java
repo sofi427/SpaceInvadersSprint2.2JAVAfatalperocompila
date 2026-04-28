@@ -18,11 +18,31 @@ public class Board extends Observable {
     private boolean gameLost;
     private boolean gameWon;
 
-    private AbstractPlayer player;
 
+
+    // Métodos de patrón Singleton
     private Board() {
 
 	}
+
+    
+    public static Board getMyBoard() {
+		if (myBoard == null)
+			myBoard = new Board();
+		return myBoard;
+	}
+
+    // Inicializaciones de board
+
+    public void initializeBoard(String type){
+        this.initializeSquares();
+        PlayerGenerator.getPlayerGenerator().generatePlayer(type, 50,55);
+        AbstractPlayer.getPlayer().registerOnBoard();
+        AlienGroup.getAlienGroup().generateAliens();
+        this.startTimer();
+        setChanged();
+        notifyObservers("READY");
+    }
 
     private void initializeSquares(){
         squares = new Square[WIDTH][LENGTH];
@@ -33,53 +53,37 @@ public class Board extends Observable {
         setChanged();
     }
 
-    public static Board getMyBoard() {
-		if (myBoard == null)
-			myBoard = new Board();
-		return myBoard;
-	}
 
-    public void initializeBoard(String type){
-        this.initializeSquares();
-        this.player = PlayerGenerator.getPlayerGenerator().generatePlayer(type, 50,55);
-        this.player.registerOnBoard();
-        this.startTimer();
-        setChanged();
-        notifyObservers("READY");
-    }
 
-    private void startTimer() {
-    	timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                actBoardEvery20ms();
-            }
-        }, 0, 20);		
-	}
+    // Métodos de movimiento del jugador
 
 	public void movePlayerRight(){
-        this.player.moveRight();
+        AbstractPlayer.getPlayer().moveRight();
     }
 
+
     public void movePlayerLeft(){
-        this.player.moveLeft();
+        AbstractPlayer.getPlayer().moveLeft();
     }
 
     public void movePlayerUp(){
-        this.player.moveUp();
+       AbstractPlayer.getPlayer().moveUp();
     }
 
     public void movePlayerDown(){
-        this.player.moveDown();
+        AbstractPlayer.getPlayer().moveDown();
     }
 
+    // Metodo de disparo del jugador
+
     public void shoot(){
-        if(this.player.canShootCurrentStrategy()){
-            this.player.consumeShot();
+        if(AbstractPlayer.getPlayer().canShootCurrentStrategy()){
+            AbstractPlayer.getPlayer().consumeShot();
         }
     }
    
+    // Método que se ejecuta cada 20ms para actualizar el estado del tablero y notificar a los observadores
+
     public void actBoardEvery20ms() {
         int[][] matrix = new int[WIDTH][LENGTH];
 
@@ -99,6 +103,16 @@ public class Board extends Observable {
         notifyObservers(matrix);
     }
 
+    private void startTimer() {
+    	timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                actBoardEvery20ms();
+            }
+        }, 0, 20);		
+	}
+
     private int encodeStateToInt(String state) {
         if (state == null) return 0;
         state = state.trim().toUpperCase();
@@ -113,7 +127,7 @@ public class Board extends Observable {
     }
 
     public String getPlayerType(){
-        return this.player.getType();
+        return AbstractPlayer.getPlayer().getType();
     }
 
     public Square getSquare(int x, int y) {
@@ -124,11 +138,11 @@ public class Board extends Observable {
     public int getHeight() { return WIDTH; }
 
     public String getCurrentShotStrategy(){
-        return this.player.getCurrentStrategy().getName();
+        return AbstractPlayer.getPlayer().getCurrentStrategy().getName();
     }
 
     public void changePlayerStrategy(){
-        this.player.nextStrategy();
+        AbstractPlayer.getPlayer().nextStrategy();
     }
 
     public void StopGame(){
