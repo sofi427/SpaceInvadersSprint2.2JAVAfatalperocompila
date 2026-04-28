@@ -22,7 +22,7 @@ public class Board extends Observable {
 
 
 
-    // Métodos de patrón Singleton
+    // Metodos de patron Singleton
     private Board() {
 
 	}
@@ -57,7 +57,7 @@ public class Board extends Observable {
 
 
 
-    // Métodos de movimiento del jugador
+    // Metodos de movimiento del jugador
 
 	public void movePlayerRight(){
         AbstractPlayer.getPlayer().moveRight();
@@ -85,7 +85,7 @@ public class Board extends Observable {
         AbstractPlayer.getPlayer().shoot();
     }
    
-    // Método que se ejecuta cada 20ms para actualizar el estado del tablero y notificar a los observadores
+    // Metodo que se ejecuta cada 20ms para actualizar el estado del tablero y notificar a los observadores
 
     public void actBoardEvery20ms() {
         int[][] matrix = new int[WIDTH][LENGTH];
@@ -102,7 +102,7 @@ public class Board extends Observable {
                 matrix[row][col] = encodeStateToInt(state);
             }
         }
-        System.out.println("El juego está");
+        System.out.println("El juego esta");
         setChanged();
         notifyObservers(matrix);
     }
@@ -149,10 +149,19 @@ public class Board extends Observable {
         AbstractPlayer.getPlayer().nextStrategy();
     }
 
-    public void StopGame(){
-    	if (timer != null) {
-            this.timer.cancel();
-    	}
+    public void StopGame() {
+        // Para el timer del board
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        // Tambien paramos el timer de los aliens.
+        AlienGroup.getAlienGroup().stopTimer();
+ 
+        // Paramos y limpiamos los disparos activos del jugador.
+        if (AbstractPlayer.getPlayer() != null) {
+            AbstractPlayer.getPlayer().stopAllShots();
+        }
     }
 
     public boolean isInside(int x, int y){

@@ -59,12 +59,18 @@ public class Shot {
             }
         }
         squares.move(0, -1);
+        
+        if (squares.getSquares().isEmpty()) {
+            destroyShot();
+        }
     }
 
     public void destroyShot() {
         active = false;
+        squares.turnEmpty();
         if (timer != null) {
         	timer.cancel();
+        	timer= null;
         }
     }
 

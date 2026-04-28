@@ -26,6 +26,8 @@ public class AlienGroup{
     }
     
     public void generateAliens() {
+        aliens.clear();
+
     	int count = random.nextInt(5) + 4; // 4 a 8 aliens
         int x, y;
         Alien possible;
@@ -57,7 +59,10 @@ public class AlienGroup{
 	}
     
     public void stopTimer() {
-        timer.cancel();
+    	if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
     
 
@@ -101,6 +106,7 @@ public class AlienGroup{
 
     public void removeAlienAt(int x, int y) {
         Alien a = getAlienAt(x, y);
+        if (a == null) return;
         a.turnSquaresToEmpty(); 
         this.aliens.remove(a);
     }

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
@@ -12,32 +14,33 @@ public class Alien {
     public Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
     }
-    
     public void changeSquaresState() {
-    	for (int i=0; i<squares.getSquares().size(); i++) {		// al crearse el alien en una posicion correcta, 
-        	Component sq=squares.getSquares().get(i);			//  cambia el estado de las casillas que ocupa
-        	((Square)sq).changeState(new AlienState());
+        // Tomamos copia de los hijos actuales (new Squares con posición)
+        ArrayList<Component> original = new ArrayList<>(squares.getSquares());
+        // Vaciamos el composite
+        for (Component c : original) squares.remove(c);
+        // Sustituimos por las casillas reales del board y las ponemos a AlienState
+        AlienState s = new AlienState();
+        for (Component c : original) {
+            Square sq = (Square) c;
+            Square boardSq = Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY());
+            boardSq.changeState(s);
+            squares.add(boardSq);
         }
     }
-
+    
     private SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         AlienState s = new AlienState();
         c.add(new Square(x,     y - 1, s)); // top
-    	Board.getMyBoard().getSquare(x, y - 1).changeState(s);
         c.add(new Square(x - 1, y,     s)); // mid-left
-    	Board.getMyBoard().getSquare(x-1, y).changeState(s);
         c.add(new Square(x,     y,     s)); // mid-center
-    	Board.getMyBoard().getSquare(x, y).changeState(s);
         c.add(new Square(x + 1, y,     s)); // mid-right
-    	Board.getMyBoard().getSquare(x+1, y).changeState(s);
         c.add(new Square(x - 1, y + 1, s)); // bot-left
-    	Board.getMyBoard().getSquare(x-1, y + 1).changeState(s);
         c.add(new Square(x + 1, y + 1, s)); // bot-right
-    	Board.getMyBoard().getSquare(x+1, y +1).changeState(s);
         return c;
     }
-    
+   
     public void moveDown() {
     	squares.move(0, 1);
 	}

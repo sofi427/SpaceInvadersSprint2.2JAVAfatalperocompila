@@ -88,7 +88,15 @@ public abstract class AbstractPlayer{
         currentStrategy.consumeShot();
     }
     
-
+    // aniadido para que Board.StopGame() pueda detener los timers de todos los disparos activos y limpiar sus casillas del board
+   public void stopAllShots() {
+       for (Shot shot : shots) {
+           if (shot.isActive()) {
+               shot.destroyShot();
+           }
+       }
+       shots.clear();
+   }
 
  //Para registrar las casillas de player en board
     public void registerOnBoard() {
