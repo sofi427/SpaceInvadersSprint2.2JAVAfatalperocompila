@@ -1,8 +1,5 @@
 package model;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
@@ -11,11 +8,9 @@ import model.state.AlienState;
 public class Alien {
 
     private final SquareComposite squares;
-    private Timer timer;
 
     public Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
-        moveEvery350ms();	//segun se crea, empieza a bajar automaticamente
     }
 
     private SquareComposite makeShape(int x, int y) {
@@ -29,27 +24,10 @@ public class Alien {
         c.add(new Square(x + 1, y + 1, s)); // bot-right
         return c;
     }
-
-    private void moveEvery350ms()
-	{
-		timer = new Timer();
-		
-		timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                moveDown();
-            }
-        }, 0, 350);
-
-	}
     
-    private void moveDown() {
+    public void moveDown() {
     	squares.move(0, 1);
 	}
-
-    public void stopTimer() {
-        timer.cancel();
-    }
     
     public SquareComposite getSquareComposite() { return squares; }
 

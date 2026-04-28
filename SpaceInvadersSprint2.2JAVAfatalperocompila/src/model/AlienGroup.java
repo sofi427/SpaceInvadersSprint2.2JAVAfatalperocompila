@@ -4,16 +4,16 @@ import model.composite.Component;
 import model.composite.Square;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
-@SuppressWarnings("deprecation")
-public class AlienGroup extends Observable{
+public class AlienGroup{
 
 	private static AlienGroup myAlienGroup;
     private final ArrayList<Alien> aliens = new ArrayList<>();
     private Random random = new Random();
-    private boolean gameWon;
+    private Timer timer;
 
     public AlienGroup() {
     	int count = random.nextInt(5) + 4; // 4 a 8 aliens
@@ -27,6 +27,8 @@ public class AlienGroup extends Observable{
             } while (!noOverlap(possible));
             aliens.add(new Alien(x, y));
         }
+        moveEvery350ms();	//un único timer para todos los aliens
+
     }
 
     public static AlienGroup getAlienGroup() {
@@ -35,6 +37,26 @@ public class AlienGroup extends Observable{
         }
         return myAlienGroup;
     }
+    
+
+    private void moveEvery350ms()
+	{
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+            	for (Alien a: aliens) {
+            		a.moveDown();
+            	}
+            }
+        }, 0, 350);
+
+	}
+    
+    public void stopTimer() {
+        timer.cancel();
+    }
+    
 
     private boolean noOverlap(Alien newAlien) {  		// mira que los aliens que se crean no coincidan de posiciones con otros
         for (Component newSq : newAlien.getSquareComposite().getSquares()) { 
