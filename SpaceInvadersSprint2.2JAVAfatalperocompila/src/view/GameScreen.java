@@ -88,9 +88,9 @@ public class GameScreen extends JFrame implements Observer {
         if (arg instanceof String) {
             String msg = (String) arg;
             if (msg.equals("WON")) {
-                showGameOverMessage("ï¿½Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
+                showGameOverMessage("¡Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
             } else if (msg.equals("LOST")) {
-                showGameOverMessage("Has perdido. La invasiï¿½n ha comenzado. Corre", Color.RED);
+                showGameOverMessage("Has perdido. La invasion ha comenzado. Corre", Color.RED);
             }
             return;
         }

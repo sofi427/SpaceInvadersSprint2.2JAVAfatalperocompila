@@ -53,6 +53,11 @@ public class AlienGroup{
             	for (Alien a: aliens) {
             		a.moveDown();
             	}
+            	// Verificar si algun alien llego al fondo
+            	if (hasReachedBottom()) {
+            		stopTimer(); // Detener el timer antes de notificar
+            		Board.getMyBoard().gameLost(); // Esto también llamara a StopGame()
+            	}
             }
         }, 0, 350);
 
@@ -107,7 +112,13 @@ public class AlienGroup{
     public void removeAlienAt(int x, int y) {
         Alien a = getAlienAt(x, y);
         if (a == null) return;
-        a.turnSquaresToEmpty(); 
-        this.aliens.remove(a);
+        // Limpiar todas las casillas del alien
+        a.turnSquaresToEmpty();
+        a.getSquareComposite().getSquares().clear(); // Limpiar completamente el composite
+        
+        if (this.aliens.isEmpty()) {
+            stopTimer();
+            Board.getMyBoard().gameWon();
+        }
     }
 }

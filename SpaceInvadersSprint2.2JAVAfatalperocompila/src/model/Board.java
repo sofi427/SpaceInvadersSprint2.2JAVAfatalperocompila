@@ -15,9 +15,7 @@ public class Board extends Observable {
     private Square[][] squares;
     private Timer timer;
 
-    @SuppressWarnings("unused")
     private boolean gameLost;
-    @SuppressWarnings("unused")
     private boolean gameWon;
 
 
@@ -37,6 +35,8 @@ public class Board extends Observable {
     // Inicializaciones de board
 
     public void initializeBoard(String type){
+    	this.gameLost = false;
+        this.gameWon = false;
         this.initializeSquares();
         PlayerGenerator.getPlayerGenerator().generatePlayer(type); //50,55 no se necesitan como parametro
         AbstractPlayer.getPlayer().registerOnBoard();
@@ -88,8 +88,16 @@ public class Board extends Observable {
     // Metodo que se ejecuta cada 20ms para actualizar el estado del tablero y notificar a los observadores
 
     public void actBoardEvery20ms() {
+    	//solo si no se ha lanzado la vic/derr antes
+    	if (gameLost || gameWon) {
+            return;
+        }
+    	 // Verificar victoria si no hay aliens en aliengroup
+        if (AlienGroup.getAlienGroup().isEmpty()) {
+            gameWon();
+            return;
+        }
         int[][] matrix = new int[WIDTH][LENGTH];
-
         for (int row = 0; row < WIDTH; row++) {
             for (int col = 0; col < LENGTH; col++) {
 
@@ -170,13 +178,17 @@ public class Board extends Observable {
     }
 
     public void gameWon() {
+        if (gameLost || gameWon) return; // Evitar multiples notificaciones
         this.gameWon = true;
+        StopGame(); // Detener todo al ganar
         setChanged();
         notifyObservers("WON");
     }
 
     public void gameLost() {
+        if (gameLost || gameWon) return; // Evitar múltiples notificaciones
         this.gameLost = true;
+        StopGame(); // Detener todo al perder
         setChanged();
         notifyObservers("LOST");
     }
