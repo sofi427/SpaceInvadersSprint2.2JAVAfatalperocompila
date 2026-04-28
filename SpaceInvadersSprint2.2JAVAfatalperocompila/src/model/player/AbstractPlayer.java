@@ -90,9 +90,9 @@ public abstract class AbstractPlayer{
 
  //Para registrar las casillas de player en board
     public void registerOnBoard() {
-    	ArrayList<Component> mySquares = new ArrayList<Component>();
-        squares = new SquareComposite();
-        for (Component c : mySquares) {
+    	ArrayList<Component> original = squares.getSquares();
+        SquareComposite boardSquares = new SquareComposite();
+        for (Component c : original) {
             Square sq = (Square) c;
             // Obtener el square real del Board
             Square boardSquare = Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY());
@@ -101,6 +101,7 @@ public abstract class AbstractPlayer{
             // Aniadir el square del Board al composite (no el privado)
             squares.add(boardSquare);
         }
+        squares = boardSquares;
     }
     
     public void notifyLost() {
