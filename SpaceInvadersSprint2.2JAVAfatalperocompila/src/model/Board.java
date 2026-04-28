@@ -15,7 +15,9 @@ public class Board extends Observable {
     private Square[][] squares;
     private Timer timer;
 
+    @SuppressWarnings("unused")
     private boolean gameLost;
+    @SuppressWarnings("unused")
     private boolean gameWon;
 
 
@@ -155,8 +157,7 @@ public class Board extends Observable {
 
     public boolean isInside(int x, int y){
         if(x>this.LENGTH || x < 0){ return false;}
-        if(y>this.WIDTH || y < 0){ return false;}
-        return true;
+        return !(y>this.WIDTH || y < 0);
     }
 
     public void gameWon() {

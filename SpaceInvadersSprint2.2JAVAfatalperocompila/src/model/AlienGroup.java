@@ -12,6 +12,7 @@ public class AlienGroup{
 
 	private static AlienGroup myAlienGroup;
     private final ArrayList<Alien> aliens = new ArrayList<>();
+    @SuppressWarnings("FieldMayBeFinal")
     private Random random = new Random();
     private Timer timer;
 
@@ -101,8 +102,6 @@ public class AlienGroup{
     public void removeAlienAt(int x, int y) {
         Alien a = getAlienAt(x, y);
         a.turnSquaresToEmpty(); 
-        if (a != null) {
-            aliens.remove(a);
-        }
+        this.aliens.remove(a);
     }
 }

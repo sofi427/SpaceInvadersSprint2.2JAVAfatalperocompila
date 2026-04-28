@@ -1,17 +1,16 @@
 package model;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
-import model.player.AbstractPlayer;
 import model.state.ShotState;
 import model.strategy.ShotStrategy;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class Shot {
     private ShotStrategy strategy;
+    @SuppressWarnings("FieldMayBeFinal")
     private SquareComposite squares;
     private Timer timer;
     private boolean active;

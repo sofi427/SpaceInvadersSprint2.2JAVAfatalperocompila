@@ -9,6 +9,7 @@ import model.state.SquareState;
 
 public class SquareComposite implements Component {
 
+    @SuppressWarnings("FieldMayBeFinal")
     private ArrayList<Component> children; 
 
 

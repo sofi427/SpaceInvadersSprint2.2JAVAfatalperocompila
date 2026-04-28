@@ -17,11 +17,14 @@ public abstract class AbstractPlayer{
 
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
+    @SuppressWarnings("FieldMayBeFinal")
     private ArrayList<ShotStrategy> strategyList;
     private int strategyIndex;
+    @SuppressWarnings("FieldMayBeFinal")
     private ArrayList<Shot> shots;
 
     //constructora
+    @SuppressWarnings("Convert2Diamond")
     protected AbstractPlayer(int centerX, int centerY) {
     	instance = this; 
         this.squares = makeShape(centerX, centerY);

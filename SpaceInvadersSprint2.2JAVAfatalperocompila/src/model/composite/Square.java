@@ -36,6 +36,7 @@ public class Square implements Component {
         return list;
     }
     
+    @Override
     public void move(int dx, int dy) {
         this.posX += dx;
         this.posY += dy;
