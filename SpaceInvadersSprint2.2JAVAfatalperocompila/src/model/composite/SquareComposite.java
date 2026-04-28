@@ -176,4 +176,8 @@ public class SquareComposite implements Component {
             s.changeState(new EmptyState());
         }
     }
+    public void destroy() {
+        turnEmpty();
+        children.clear();
+    }
 }

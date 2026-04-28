@@ -50,6 +50,9 @@ public class Alien {
     public void turnSquaresToEmpty() {
     	this.squares.turnEmpty();		
     }
+    public void destroy() {
+        this.squares.destroy();
+    }
 
     public int getBottomY() {
         int maxY = 0;

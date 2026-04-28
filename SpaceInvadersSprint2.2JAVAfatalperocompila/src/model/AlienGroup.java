@@ -50,14 +50,14 @@ public class AlienGroup{
 		timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-            	for (Alien a: aliens) {
-            		a.moveDown();
-            	}
-            	// Verificar si algun alien llego al fondo
-            	if (hasReachedBottom()) {
-            		stopTimer(); // Detener el timer antes de notificar
-            		Board.getMyBoard().gameLost(); // Esto también llamara a StopGame()
-            	}
+            	for (Alien a: new ArrayList<>(aliens)) {
+                    a.moveDown();
+                }
+                // Verificar si algun alien llego al fondo
+                if (hasReachedBottom()) {
+	            	stopTimer(); // Detener el timer antes de notificar
+	            	Board.getMyBoard().gameLost(); // Esto tambien llamara a StopGame()
+	            }
             }
         }, 0, 350);
 
@@ -72,11 +72,11 @@ public class AlienGroup{
     
 
     private boolean noOverlap(Alien newAlien) {  		// mira que los aliens que se crean no coincidan de posiciones con otros
-        for (Component newSq : newAlien.getSquareComposite().getSquares()) { 
-            for (Alien existing : aliens) {
+        for (Component newSq : newAlien.getSquareComposite().getSquares()) {
+            for (Alien existing : new ArrayList<>(aliens)) {
                 for (Component existSq : existing.getSquareComposite().getSquares()) {
-                	Square newSquare = (Square) newSq;
-                	Square existSquare = (Square) existSq;
+	                	    Square newSquare = (Square) newSq;
+	                	    Square existSquare = (Square) existSq;
                     if (newSquare.getPosX() == existSquare.getPosX() && newSquare.getPosY() == existSquare.getPosY())
                     {
                         return false;
@@ -89,7 +89,7 @@ public class AlienGroup{
     
 
     public boolean hasReachedBottom() {
-        for (Alien a : aliens) {
+        for (Alien a : new ArrayList<>(aliens)) {
             if (a.getBottomY() >= 60 - 1) return true;
         }
         return false;
@@ -98,10 +98,10 @@ public class AlienGroup{
     
     public void    remove(Alien a)   { aliens.remove(a); }
     public boolean isEmpty()         { return aliens.isEmpty(); }
-    public List<Alien> getAliens()   { return aliens; }
+    public List<Alien> getAliens()   { return new ArrayList<>(aliens); }
 
     private Alien getAlienAt(int x, int y) {
-        for (Alien a : aliens) {
+        for (Alien a : new ArrayList<>(aliens)) {
             if (a.containsSquare(x, y)) {
                 return a;
             }
@@ -112,12 +112,12 @@ public class AlienGroup{
     public void removeAlienAt(int x, int y) {
         Alien a = getAlienAt(x, y);
         if (a == null) return;
-        // Limpiar todas las casillas del alien
-        a.turnSquaresToEmpty();
-        a.getSquareComposite().getSquares().clear(); // Limpiar completamente el composite
+        // Eliminar por completo el composite del alien
+        a.destroy();
         aliens.remove(a);
+        boolean win = aliens.isEmpty();
 
-        if (this.aliens.isEmpty()) {
+        if (win) {
             stopTimer();
             Board.getMyBoard().gameWon();
         }
