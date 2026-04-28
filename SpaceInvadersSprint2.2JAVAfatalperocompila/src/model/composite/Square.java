@@ -27,7 +27,7 @@ public class Square implements Component {
     
     //Metodos necesarios para otras clases (cambiar estado de la casilla, get la posicion, saber el estado mediante una string...)
     public SquareState getState() { return state; }
-    public void setState(SquareState state) { this.state = state; }
+    public void changeState(SquareState state) { this.state = state; }
     public int getPosX() { return posX; }
     public int getPosY() { return posY; }
     public String getStateString() { return this.state.getStateS();}
@@ -43,8 +43,5 @@ public class Square implements Component {
         this.posX += dx;
         this.posY += dy;
     }
-    //Devuelve lista vacia porque Square no tiene hijos(implementado debido a el requerimiento de la interfaz component)
-    public List<Component> getChildren() {
-        return Collections.emptyList();
-    }
+   
 }

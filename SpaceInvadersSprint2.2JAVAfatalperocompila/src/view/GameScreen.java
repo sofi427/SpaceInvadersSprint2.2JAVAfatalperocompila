@@ -50,7 +50,6 @@ public class GameScreen extends JFrame implements Observer {
         requestFocusInWindow();
         //Aniadimos observer a gamescreen
         Board.getMyBoard().addObserver(this);
-        AbstractPlayer.getPlayer().addObserver(this);
     }
 
 
