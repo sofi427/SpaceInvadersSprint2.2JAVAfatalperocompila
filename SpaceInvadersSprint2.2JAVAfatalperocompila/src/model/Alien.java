@@ -21,11 +21,17 @@ public class Alien {
         SquareComposite c = new SquareComposite();
         AlienState s = new AlienState();
         c.add(new Square(x,     y - 1, s)); // top
+    	Board.getMyBoard().getSquare(x, y - 1).changeState(s);
         c.add(new Square(x - 1, y,     s)); // mid-left
+    	Board.getMyBoard().getSquare(x-1, y).changeState(s);
         c.add(new Square(x,     y,     s)); // mid-center
+    	Board.getMyBoard().getSquare(x, y).changeState(s);
         c.add(new Square(x + 1, y,     s)); // mid-right
+    	Board.getMyBoard().getSquare(x+1, y).changeState(s);
         c.add(new Square(x - 1, y + 1, s)); // bot-left
+    	Board.getMyBoard().getSquare(x-1, y + 1).changeState(s);
         c.add(new Square(x + 1, y + 1, s)); // bot-right
+    	Board.getMyBoard().getSquare(x+1, y +1).changeState(s);
         return c;
     }
     
