@@ -99,6 +99,7 @@ public class Board extends Observable {
                 matrix[row][col] = encodeStateToInt(state);
             }
         }
+        System.out.println("El juego está");
         setChanged();
         notifyObservers(matrix);
     }

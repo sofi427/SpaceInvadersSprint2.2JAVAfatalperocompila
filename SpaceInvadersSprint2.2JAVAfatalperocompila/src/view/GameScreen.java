@@ -1,8 +1,5 @@
 package view;
 
-import model.Board;
-import model.player.AbstractPlayer;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,11 +12,12 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import model.Board;
+import model.player.AbstractPlayer;
 
 @SuppressWarnings("deprecation")
 public class GameScreen extends JFrame implements Observer {
