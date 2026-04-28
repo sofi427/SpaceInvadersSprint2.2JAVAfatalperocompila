@@ -115,7 +115,8 @@ public class AlienGroup{
         // Limpiar todas las casillas del alien
         a.turnSquaresToEmpty();
         a.getSquareComposite().getSquares().clear(); // Limpiar completamente el composite
-        
+        aliens.remove(a);
+
         if (this.aliens.isEmpty()) {
             stopTimer();
             Board.getMyBoard().gameWon();
