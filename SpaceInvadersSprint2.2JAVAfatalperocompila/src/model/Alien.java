@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-
 import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
@@ -15,7 +14,7 @@ public class Alien {
         this.squares = makeShape(centerX, centerY);
     }
     public void changeSquaresState() {
-        // Tomamos copia de los hijos actuales (new Squares con posición)
+        // Tomamos copia de los hijos actuales (new Squares con posiciï¿½n)
         ArrayList<Component> original = new ArrayList<>(squares.getSquares());
         // Vaciamos el composite
         for (Component c : original) squares.remove(c);
@@ -37,14 +36,14 @@ public class Alien {
         c.add(new Square(x + 1, y - 1, s));
         c.add(new Square(x + 2, y - 2, s));
         c.add(new Square(x - 2, y,     s));
-        c.add(new Square(x - 1, y,     s));
+        //c.add(new Square(x - 1, y,     s));
         c.add(new Square(x,     y,     s));
-        c.add(new Square(x + 1, y,     s));
+        //c.add(new Square(x + 1, y,     s));
         c.add(new Square(x + 2, y,     s));
         c.add(new Square(x - 2, y + 1, s));
         c.add(new Square(x - 1, y + 1, s));		//para que no se solapen con noOverlap(), se hace esta forma
         c.add(new Square(x - 1, y + 2, s));
-        c.add(new Square(x,     y + 1, s));		//se añaden
+        c.add(new Square(x,     y + 1, s));		//se aï¿½aden
         c.add(new Square(x + 1, y + 1, s));		//estas 3 casillas
         c.add(new Square(x + 2, y + 1, s));
         c.add(new Square(x + 1, y + 2, s));

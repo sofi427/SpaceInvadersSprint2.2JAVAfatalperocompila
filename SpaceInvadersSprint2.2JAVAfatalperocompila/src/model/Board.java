@@ -186,11 +186,19 @@ public class Board extends Observable {
     }
 
     public void gameLost() {
-        if (gameLost || gameWon) return; // Evitar múltiples notificaciones
+        if (gameLost || gameWon) return; // Evitar mï¿½ltiples notificaciones
         this.gameLost = true;
         StopGame(); // Detener todo al perder
         setChanged();
         notifyObservers("LOST");
+    }
+
+    public int getRemainingShots() {
+        return AbstractPlayer.getPlayer().getRemianingShots();
+    }
+
+    public String getShotType(){
+        return AbstractPlayer.getPlayer().getShotType();
     }
     
 }
