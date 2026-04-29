@@ -34,17 +34,16 @@ public class RedPlayer extends AbstractPlayer {
     protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         PlayerState s = new PlayerState(Color.RED);
-        c.add(new Square(x - 1, y - 2, s));
-        c.add(new Square(x,     y - 2, s));
-        c.add(new Square(x + 1, y - 2, s));
-        c.add(new Square(x - 1, y - 1, s));
         c.add(new Square(x,     y - 1, s));
+        c.add(new Square(x - 1, y - 1, s));
         c.add(new Square(x + 1, y - 1, s));
         c.add(new Square(x - 2, y,     s));
         c.add(new Square(x - 1, y,     s));
         c.add(new Square(x,     y,     s));
         c.add(new Square(x + 1, y,     s));
         c.add(new Square(x + 2, y,     s));
+        c.add(new Square(x - 1, y + 1, s));
+        c.add(new Square(x + 1, y + 1, s));
         return c;
     }
 

@@ -32,12 +32,19 @@ public class Alien {
     private SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         AlienState s = new AlienState();
-        c.add(new Square(x,     y - 1, s)); // top
-        c.add(new Square(x - 1, y,     s)); // mid-left
-        c.add(new Square(x,     y,     s)); // mid-center
-        c.add(new Square(x + 1, y,     s)); // mid-right
-        c.add(new Square(x - 1, y + 1, s)); // bot-left
-        c.add(new Square(x + 1, y + 1, s)); // bot-right
+        c.add(new Square(x - 2, y - 2, s));
+        c.add(new Square(x - 1, y - 1, s));
+        c.add(new Square(x + 1, y - 1, s));
+        c.add(new Square(x + 2, y - 2, s));
+        c.add(new Square(x - 2, y,     s));
+        c.add(new Square(x - 1, y,     s));
+        c.add(new Square(x,     y,     s));
+        c.add(new Square(x + 1, y,     s));
+        c.add(new Square(x + 2, y,     s));
+        c.add(new Square(x - 2, y + 1, s));
+        c.add(new Square(x - 1, y + 2, s));
+        c.add(new Square(x + 2, y + 1, s));
+        c.add(new Square(x + 1, y + 2, s));
         return c;
     }
    

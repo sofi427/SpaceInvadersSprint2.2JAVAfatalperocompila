@@ -33,14 +33,11 @@ public class GreenPlayer extends AbstractPlayer {
     protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         PlayerState s = new PlayerState(Color.GREEN);
-        c.add(new Square(x,     y - 2, s));
         c.add(new Square(x - 1, y - 1, s));
-        c.add(new Square(x,     y - 1, s));
-        c.add(new Square(x + 1, y - 1, s));
+        c.add(new Square(x - 1, y,     s));
         c.add(new Square(x,     y,     s));
-        c.add(new Square(x - 1, y + 1, s));
-        c.add(new Square(x,     y + 1, s));
-        c.add(new Square(x + 1, y + 1, s));
+        c.add(new Square(x + 1, y,     s));
+        c.add(new Square(x + 1, y - 1, s));
         return c;
     }
 
