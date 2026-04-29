@@ -13,11 +13,11 @@ public class ArrowStrategy implements ShotStrategy {
         SquareComposite composite = new SquareComposite();
         ShotState s = new ShotState();
         composite.add(new Square(originX,     originY,     s));
-        composite.add(new Square(originX - 1, originY + 1, s));
-        composite.add(new Square(originX,     originY + 1, s));
-        composite.add(new Square(originX + 1, originY + 1, s));
-        composite.add(new Square(originX,     originY + 2, s));
-        composite.add(new Square(originX,     originY + 3, s));
+        composite.add(new Square(originX,     originY - 1, s));
+        composite.add(new Square(originX,     originY - 2, s));
+        composite.add(new Square(originX + 1, originY - 2, s));
+        composite.add(new Square(originX - 1, originY - 2, s));
+        composite.add(new Square(originX,     originY - 3, s));
         return composite;
     }
 
