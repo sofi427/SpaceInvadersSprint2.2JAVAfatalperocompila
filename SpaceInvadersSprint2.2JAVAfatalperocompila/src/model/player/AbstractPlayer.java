@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public abstract class AbstractPlayer{
 
 	//atributos
-    private static AbstractPlayer instance;
+    private static AbstractPlayer instance=null;
 
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
@@ -114,6 +114,23 @@ public abstract class AbstractPlayer{
         squares = boardSquares;
     }
     
+    public void removeShotAt(int x, int y) {
+        Shot s = getShotAt(x, y);
+        if (s == null) return;
+        // Eliminar por completo el composite del shot
+        s.destroyShot();
+        shots.remove(s);
+    }
+
+    private Shot getShotAt(int x, int y) {
+        for (Shot s : new ArrayList<>(shots)) {
+            if (s.containsSquare(x, y)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     
     //getters
     public ShotStrategy getCurrentStrategy() { return currentStrategy; }

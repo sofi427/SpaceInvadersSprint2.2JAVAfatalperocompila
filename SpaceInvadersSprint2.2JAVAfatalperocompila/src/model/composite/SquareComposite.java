@@ -1,8 +1,11 @@
 package model.composite;
 
 import java.util.ArrayList;
+
+import model.Alien;
 import model.AlienGroup;
 import model.Board;
+import model.player.AbstractPlayer;
 import model.state.AlienState;
 import model.state.EmptyState;
 import model.state.SquareState;
@@ -38,8 +41,8 @@ public class SquareComposite implements Component {
         ArrayList<SquareState> oldTargetStates = new ArrayList<>();
         ArrayList<String> results = new ArrayList<>();
 
-        java.util.HashSet<String> aliensRemoved = new java.util.HashSet<>();  // no quiero usar hashset pero es para evitar eliminar el mismo alien 2 veces si el shot tiene varias casillas y colisiona con el mismo alien en varias de ellas
-
+        ArrayList<int[]> shotsToRemove = new ArrayList<>();
+        
         // ---------- FASE 1: planificar (sin modificar el board) ----------
         for (Component comp : current) {
             Square from = (Square) comp;
@@ -100,38 +103,41 @@ public class SquareComposite implements Component {
                 }
 
                 case "destroyboth" -> {
-                    // Si en el destino había alien, eliminarlo del alienGroup por coordenadas
                     if (oldDestState instanceof AlienState) {
-                        String k = dest.getPosX() + "," + dest.getPosY();
-                        if (!aliensRemoved.contains(k)) {
-                            aliensRemoved.add(k);
+                            for (Alien a : AlienGroup.getAlienGroup().getAliens()) {
+                                if (a.containsSquare(dest.getPosX(), dest.getPosY())) {
+                                    for (Component c : new ArrayList<>(a.getSquareComposite().getSquares())) {
+                                        Square sq = (Square) c;
+                                        Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY()).changeState(new EmptyState());
+                                    }
+                                }
+                            }
                             AlienGroup.getAlienGroup().removeAlienAt(dest.getPosX(), dest.getPosY());
-                        }
                     }
-
-                    // El shot también desaparece en esa casilla
-                    dest.changeState(new EmptyState());
+                    shotsToRemove.add(new int[]{dest.getPosX(), dest.getPosY()});
+                 
                 }
-
-                default -> {
-                    // Si aparece algo inesperado, por seguridad no hacemos nada.
+                default -> { // Si aparece algo inesperado, por seguridad no hacemos nada. 
                 }
-            }
+           }
         }
-
-
+            
+        // ---------- FASE 4: aqui se añade las casillas destino al composite de this ----------
         this.children.clear();
         for (int i = 0; i < target.size(); i++) {
             if ("move".equals(results.get(i))) {
                 this.children.add(target.get(i)); // Square es Component
             }
-            // si destroyboth => esa parte del shot desaparece
         }
-
-        // Si no quedan casillas, el shot ha muerto (ya no se moverá)
-        // (si tienes un flag active/alive, aquí lo marcas)
-        // if (this.children.isEmpty()) this.alive = false;
-
+     // ---------- FASE 5: destruir el shot si hubo colisión con alien (al final pq si no no se borra por algna razon)---------
+        if (!shotsToRemove.isEmpty()) {
+            if (!this.children.isEmpty()) {
+                Square shotSq = (Square) this.children.get(0);
+                AbstractPlayer.getPlayer().removeShotAt(shotSq.getPosX(), shotSq.getPosY());
+            } else {
+                AbstractPlayer.getPlayer().removeShotAt(shotsToRemove.get(0)[0], shotsToRemove.get(0)[1]);
+            }
+        }
     }
 
     private boolean isInCurrentByPosition(ArrayList<Component> current, Square dest) {

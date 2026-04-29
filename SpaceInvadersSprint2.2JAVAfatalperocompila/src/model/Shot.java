@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import model.composite.Component;
@@ -24,6 +25,7 @@ public class Shot {
         	Component sq=squares.getSquares().get(i);
         	((Square)sq).changeState(new ShotState());
         }
+        registerOnBoard();
     }
 
     public ShotStrategy getStrategy(){ 
@@ -67,7 +69,7 @@ public class Shot {
 
     public void destroyShot() {
         active = false;
-        squares.turnEmpty();
+        squares.destroy();
         if (timer != null) {
         	timer.cancel();
         	timer= null;
@@ -78,7 +80,29 @@ public class Shot {
     	return active; 
     }
     
-
+    public boolean containsSquare(int x, int y) {
+        for (Component c : squares.getSquares()) {
+            Square s = (Square) c;
+            if (s.getPosX() == x && s.getPosY() == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void registerOnBoard() {
+    	ArrayList<Component> original = new ArrayList<>(squares.getSquares()); //es una copia de las casillas
+        SquareComposite boardSquares = new SquareComposite();
+        for (Component c : original) {
+            Square sq = (Square) c;
+            // Obtener el square real del Board
+            Square boardSquare = Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY());
+            // Copiarle el estado
+            boardSquare.changeState(sq.getState());
+            // Aniadir el square del Board al composite (no el privado)
+            boardSquares.add(boardSquare);
+        }
+        squares = boardSquares;
+    }
 }
  
 

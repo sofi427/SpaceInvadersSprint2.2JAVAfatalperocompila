@@ -10,7 +10,7 @@ import model.composite.Square;
 
 public class AlienGroup{
 
-	private static AlienGroup myAlienGroup;
+	private static AlienGroup myAlienGroup=null;
     private final ArrayList<Alien> aliens = new ArrayList<>();
     @SuppressWarnings("FieldMayBeFinal")
     private Random random = new Random();
@@ -116,7 +116,6 @@ public class AlienGroup{
         a.destroy();
         aliens.remove(a);
         boolean win = aliens.isEmpty();
-
         if (win) {
             stopTimer();
             Board.getMyBoard().gameWon();

@@ -11,7 +11,7 @@ import model.player.PlayerGenerator;
 public class Board extends Observable {
     public final int LENGTH = 100; // Les he puesto final porque so
 	private final int WIDTH = 60;
-    private static Board myBoard;
+    private static Board myBoard=null;
     private Square[][] squares;
     private Timer timer;
 
@@ -110,7 +110,6 @@ public class Board extends Observable {
                 matrix[row][col] = encodeStateToInt(state);
             }
         }
-        System.out.println("El juego esta");
         setChanged();
         notifyObservers(matrix);
     }

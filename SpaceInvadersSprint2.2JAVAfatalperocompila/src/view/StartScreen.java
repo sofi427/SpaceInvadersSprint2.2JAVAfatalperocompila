@@ -50,9 +50,8 @@ public class StartScreen extends JFrame implements Observer {
         });
     }
 
-
     public StartScreen() {
-        setTitle("Pantalla de selección");
+        setTitle("Pantalla de selecciï¿½n");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 700, 471);
         Image bgImage = new ImageIcon(
@@ -95,7 +94,7 @@ public class StartScreen extends JFrame implements Observer {
 
     private JLabel getLblPressPlay() {
         if (lblPressPlay == null) {
-            lblPressPlay = new JLabel("¡Elige tu nave! Por defecto: VERDE");
+            lblPressPlay = new JLabel("ï¿½Elige tu nave! Por defecto: VERDE");
             lblPressPlay.setBounds(200, 155, 300, 20);
             lblPressPlay.setHorizontalAlignment(SwingConstants.CENTER);
             lblPressPlay.setForeground(Color.LIGHT_GRAY);

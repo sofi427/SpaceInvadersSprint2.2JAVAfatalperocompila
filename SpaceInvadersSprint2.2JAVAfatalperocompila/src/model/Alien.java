@@ -5,10 +5,11 @@ import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
 import model.state.AlienState;
+import model.state.EmptyState;
 
 public class Alien {
 
-    private final SquareComposite squares;
+    private SquareComposite squares;
 
     public Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
@@ -60,7 +61,7 @@ public class Alien {
     	this.squares.turnEmpty();		
     }
     public void destroy() {
-        this.squares.destroy();
+        squares.getSquares().clear();
     }
 
     public int getBottomY() {
