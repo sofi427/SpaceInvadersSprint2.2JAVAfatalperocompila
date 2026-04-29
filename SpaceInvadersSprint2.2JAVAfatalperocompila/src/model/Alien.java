@@ -42,7 +42,10 @@ public class Alien {
         c.add(new Square(x + 1, y,     s));
         c.add(new Square(x + 2, y,     s));
         c.add(new Square(x - 2, y + 1, s));
+        c.add(new Square(x - 1, y + 1, s));		//para que no se solapen con noOverlap(), se hace esta forma
         c.add(new Square(x - 1, y + 2, s));
+        c.add(new Square(x,     y + 1, s));		//se añaden
+        c.add(new Square(x + 1, y + 1, s));		//estas 3 casillas
         c.add(new Square(x + 2, y + 1, s));
         c.add(new Square(x + 1, y + 2, s));
         return c;
