@@ -5,10 +5,13 @@ import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
 import model.state.AlienState;
+import model.strategy.PixelStrategy;
+import model.strategy.ShotStrategy;
 
 public abstract class Alien {
 
     protected SquareComposite squares;
+    protected ArrayList<Shot> shots = new ArrayList<Shot>();
 
     protected Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
@@ -84,4 +87,15 @@ public abstract class Alien {
         }
         return false;
     }
+    
+    public void shoot() {
+		Square centre = this.squares.getCenterSquare();
+		ShotStrategy shot = new PixelStrategy();
+		Shot newShot = new Shot(shot, centre.getPosX(), centre.getPosY()+3);
+		newShot.startMoving("down");
+		shots.add(newShot);
+    }
+    
+    
+    
 }

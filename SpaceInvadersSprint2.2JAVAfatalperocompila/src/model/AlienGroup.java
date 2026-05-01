@@ -7,12 +7,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import model.composite.Component;
 import model.composite.Square;
-import model.strategy.NormalAlien;
 
 public class AlienGroup{
 
 	private static AlienGroup myAlienGroup=null;
-    private final ArrayList<Alien> aliens = new ArrayList<>();
+    private ArrayList<Alien> aliens = new ArrayList<>();
     @SuppressWarnings("FieldMayBeFinal")
     private Random random = new Random();
     private Timer timer;
@@ -42,6 +41,7 @@ public class AlienGroup{
             aliens.add(possible);
         }
         moveEvery350ms();	//un unico timer para todos los aliens
+        shootEvery2s();
     }
     
     
@@ -61,14 +61,31 @@ public class AlienGroup{
 	            }
             }
         }, 0, 350);
-
 	}
+    
+    private void shootEvery2s() {
+    	timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+              	int shootingAliens = random.nextInt(3);
+            	for (int i=0; i<shootingAliens;i++) {
+                	int x = random.nextInt(aliens.size());
+                	aliens.get(x).shoot();
+            	}
+            }
+        }, 0, 2000);
+    }
     
     public void stopTimer() {
     	if (timer != null) {
             timer.cancel();
             timer = null;
         }
+    }
+    
+    public void clearAliens() {
+    	this.aliens=new ArrayList<Alien>();
     }
     
 
@@ -128,8 +145,9 @@ public class AlienGroup{
             System.out.println("No se puede generar el Final Boss mientras queden aliens normales.");
             return;
         } 
-
         FinalBoss finalBoss = new FinalBoss(50, 5);
         finalBoss.changeSquaresState();
         aliens.add(finalBoss);
+        shootEvery2s();
+}
 }

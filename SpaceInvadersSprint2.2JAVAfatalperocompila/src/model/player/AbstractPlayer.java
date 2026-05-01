@@ -63,7 +63,7 @@ public abstract class AbstractPlayer{
     		ShotStrategy newShotStrategy = strategyList.get(strategyIndex);
     		Square centre = this.squares.getCenterSquare();
     		Shot newShot = new Shot(newShotStrategy, centre.getPosX(), centre.getPosY()-2);
-    		newShot.startMoving();
+    		newShot.startMoving("up");
     		this.shots.add(newShot);
     		this.consumeShot();
     	}

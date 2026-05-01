@@ -40,30 +40,30 @@ public class Shot {
     	return squares; 
     }
     
-    public void startMoving() {
+    public void startMoving(String dir) {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (active) {
-                    moveUp();
+                    move(dir);
                 }
             }
         }, 0, 50);
     }
 
-    private void moveUp() {
+    private void move(String dir) {
         for (int i=0; i<squares.getSquares().size(); i++) {
         	Component sq=squares.getSquares().get(i);
-            if (((Square) sq).getPosY()-1 < 0) {
+            if (((Square) sq).getPosY()-1 < 0 || ((Square) sq).getPosY()+1 > 59 || squares.getSquares().isEmpty()) {
                 destroyShot();
                 return;
             }
         }
-        squares.move(0, -1);
-        
-        if (squares.getSquares().isEmpty()) {
-            destroyShot();
+        if (dir.equals("up")) {
+            squares.move(0, -1);
+        } else {
+            squares.move(0, 1);
         }
     }
 
@@ -105,4 +105,3 @@ public class Shot {
     }
 }
  
-

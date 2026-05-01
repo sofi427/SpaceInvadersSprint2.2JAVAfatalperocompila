@@ -1,6 +1,5 @@
-package model.strategy;
+package model;
 
-import model.Alien;
 import model.composite.SquareComposite;
 
 public class NormalAlien extends Alien {

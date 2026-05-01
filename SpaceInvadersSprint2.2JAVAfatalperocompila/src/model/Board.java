@@ -164,7 +164,8 @@ public class Board extends Observable {
         }
         // Tambien paramos el timer de los aliens.
         AlienGroup.getAlienGroup().stopTimer();
- 
+        AlienGroup.getAlienGroup().clearAliens();
+        
         // Paramos y limpiamos los disparos activos del jugador.
         if (AbstractPlayer.getPlayer() != null) {
             AbstractPlayer.getPlayer().stopAllShots();
