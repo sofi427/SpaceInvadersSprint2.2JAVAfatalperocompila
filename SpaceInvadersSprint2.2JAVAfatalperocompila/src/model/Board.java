@@ -40,7 +40,7 @@ public class Board extends Observable {
         this.initializeSquares();
         PlayerGenerator.getPlayerGenerator().generatePlayer(type); //50,55 no se necesitan como parametro
         AbstractPlayer.getPlayer().registerOnBoard();
-        AlienGroup.getAlienGroup().generateAliens();
+        AlienGroup.getAlienGroup().generateNormalAliens();
         this.startTimer();
         setChanged();
         notifyObservers("READY");
@@ -193,7 +193,7 @@ public class Board extends Observable {
     }
 
     public int getRemainingShots() {
-        return AbstractPlayer.getPlayer().getRemianingShots();
+        return AbstractPlayer.getPlayer().getRemainingShots();
     }
 
     public String getShotType(){

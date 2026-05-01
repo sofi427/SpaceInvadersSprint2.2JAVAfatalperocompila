@@ -5,16 +5,16 @@ import model.composite.Component;
 import model.composite.Square;
 import model.composite.SquareComposite;
 import model.state.AlienState;
-import model.state.EmptyState;
 
-public class Alien {
+public abstract class Alien {
 
-    private SquareComposite squares;
+    protected SquareComposite squares;
 
-    public Alien(int centerX, int centerY) {
+    protected Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
     }
-    public void changeSquaresState() {
+
+    protected void changeSquaresState() {
         // Tomamos copia de los hijos actuales (new Squares con posici�n)
         ArrayList<Component> original = new ArrayList<>(squares.getSquares());
         // Vaciamos el composite
@@ -29,7 +29,7 @@ public class Alien {
         }
     }
     
-    private SquareComposite makeShape(int x, int y) {
+    protected SquareComposite makeShape(int x, int y) {
         SquareComposite c = new SquareComposite();
         AlienState s = new AlienState();
         c.add(new Square(x - 2, y - 2, s));
@@ -51,20 +51,20 @@ public class Alien {
         return c;
     }
    
-    public void moveDown() {
+    protected void moveDown() {
     	squares.move(0, 1);
 	}
     
     public SquareComposite getSquareComposite() { return squares; }
     
-    public void turnSquaresToEmpty() {
+    protected void turnSquaresToEmpty() {
     	this.squares.turnEmpty();		
     }
-    public void destroy() {
+    protected void destroy() {
         squares.getSquares().clear();
     }
 
-    public int getBottomY() {
+    protected int getBottomY() {
         int maxY = 0;
         for (Component squ : squares.getSquares()) {
         	Square sq = (Square) squ;
@@ -75,7 +75,7 @@ public class Alien {
         return maxY;
     }
 
-    public boolean containsSquare(int x, int y) {
+    public  boolean containsSquare(int x, int y) {
         for (Component c : squares.getSquares()) {
             Square s = (Square) c;
             if (s.getPosX() == x && s.getPosY() == y) {

@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import model.composite.Component;
 import model.composite.Square;
+import model.strategy.NormalAlien;
 
 public class AlienGroup{
 
@@ -25,7 +26,7 @@ public class AlienGroup{
         return myAlienGroup;
     }
     
-    public void generateAliens() {
+    public void generateNormalAliens() {
         aliens.clear();
 
     	int count = random.nextInt(5) + 4; // 4 a 8 aliens
@@ -35,7 +36,7 @@ public class AlienGroup{
             do {
                 x = random.nextInt(95) + 3;
                 y = random.nextInt(8)  + 2;
-                possible = new Alien(x, y);
+                possible = new NormalAlien(x, y);
             } while (!noOverlap(possible));
             possible.changeSquaresState();
             aliens.add(possible);
@@ -121,4 +122,14 @@ public class AlienGroup{
             Board.getMyBoard().gameWon();
         }
     }
+
+    public void generateFinalBoss() {
+        if (!aliens.isEmpty()) {
+            System.out.println("No se puede generar el Final Boss mientras queden aliens normales.");
+            return;
+        } 
+
+        FinalBoss finalBoss = new FinalBoss(50, 5);
+        finalBoss.changeSquaresState();
+        aliens.add(finalBoss);
 }
