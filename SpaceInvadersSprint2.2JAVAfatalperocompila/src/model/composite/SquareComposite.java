@@ -151,12 +151,12 @@ public class SquareComposite implements Component {
 }
 
 
-    public ArrayList<Component> getSquares() {
+    public synchronized ArrayList<Component> getSquares() {
         return children;
     }
 
 
-    public Square getCenterSquare() { // El método creo que está hecho pero cuidado porque alomejor al moverse no se actualiza
+    public synchronized Square getCenterSquare() { // El método creo que está hecho pero cuidado porque alomejor al moverse no se actualiza
 
         int maxX = -1;
         int maxY = -1;

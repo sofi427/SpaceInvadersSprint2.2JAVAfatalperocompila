@@ -141,7 +141,7 @@ public class Board extends Observable {
         return AbstractPlayer.getPlayer().getType();
     }
 
-    public Square getSquare(int x, int y) {
+    public synchronized Square getSquare(int x, int y) {
         return squares[y][x];
     }
 

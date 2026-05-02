@@ -68,5 +68,9 @@ public class NormalAlien extends Alien {
 	protected Integer getRemainingLife() {
 		return null;
 	}
+
+	@Override
+	protected void move(int x, int y) {
+	}
 }
 

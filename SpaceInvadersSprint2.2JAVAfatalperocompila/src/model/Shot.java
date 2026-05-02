@@ -89,7 +89,7 @@ public class Shot {
         }
         return false;
     }
-    public void registerOnBoard() {
+    public synchronized void registerOnBoard() {
     	ArrayList<Component> original = new ArrayList<>(squares.getSquares()); //es una copia de las casillas
         SquareComposite boardSquares = new SquareComposite();
         for (Component c : original) {

@@ -15,6 +15,10 @@ public class AlienGroup{
     @SuppressWarnings("FieldMayBeFinal")
     private Random random = new Random();
     private Timer timer;
+    private Timer timer2;
+    private int steps = 0;
+    private boolean goingRight = true;
+
 
     private AlienGroup() {}
 
@@ -40,12 +44,12 @@ public class AlienGroup{
             possible.changeSquaresState();
             aliens.add(possible);
         }
-        moveEvery350ms();	//un unico timer para todos los aliens
-        shootEvery2s();
+        moveNormalEvery350ms();	//un unico timer para todos los aliens
+        shootNormalEvery2s();
     }
     
     
-    private void moveEvery350ms()
+    private void moveNormalEvery350ms()
 	{
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -63,9 +67,9 @@ public class AlienGroup{
         }, 0, 350);
 	}
     
-    private void shootEvery2s() {
-    	timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
+    private void shootNormalEvery2s() {
+    	timer2 = new Timer();
+		timer2.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
               	int shootingAliens = random.nextInt(3);
@@ -81,6 +85,10 @@ public class AlienGroup{
     	if (timer != null) {
             timer.cancel();
             timer = null;
+        }
+    	if (timer2 != null) {
+            timer2.cancel();
+            timer2 = null;
         }
     }
     
@@ -133,7 +141,7 @@ public class AlienGroup{
         // Eliminar por completo el composite del alien
         else if (a instanceof FinalBoss) {
         	a.destroy();
-        	if (a.getRemainingLife() <= 0) {
+        	if (((FinalBoss) a).isItDead()) {
             	stopTimer();
             	Board.getMyBoard().gameWon();
         	}
@@ -141,8 +149,9 @@ public class AlienGroup{
         else {
         	a.destroy();
         	aliens.remove(a);
-        	if (aliens.isEmpty())
-        	{ this.generateFinalBoss(); }
+        	if (aliens.isEmpty()){
+        		this.generateFinalBoss();
+        	}
         }
     }
 
@@ -151,12 +160,57 @@ public class AlienGroup{
             System.out.println("No se puede generar el Final Boss mientras queden aliens normales.");
             return;
         }
-        int x = random.nextInt(79) + 10;
-        int y = 8;
-        FinalBoss finalBoss = new FinalBoss(x, y);
+        this.stopTimer();
+        //int x = random.nextInt(79) + 10;
+        FinalBoss finalBoss = new FinalBoss(25, 8);
         finalBoss.changeSquaresState();
         aliens.add(finalBoss);
-        shootEvery2s();
+        moveBossEvery100ms();
+        shootBossEvery1s();
+    }
+    
+    private void moveBossEvery100ms() {
+    	timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+            	if (aliens.isEmpty()) return;
+            	moveFinalBoss();
+                // Verificar si algun alien llego al fondo
+                if (hasReachedBottom()) {
+	            	stopTimer(); // Detener el timer antes de notificar
+	            	Board.getMyBoard().gameLost(); // Esto tambien llamara a StopGame()
+	            }
+            }
+        }, 0, 100);
+    }
+    
+    private void moveFinalBoss() {
+    	if (steps < 50) {
+    		int x;
+    		if (goingRight)
+    		    x = 1;
+    		else
+    		    x = -1;
+    		aliens.get(0).move(x, 0);
+    		steps++;
+    	} else {
+    		aliens.get(0).move(0, 2);      // baja
+    		steps = 0;
+    		goingRight = !goingRight;
+    	}
+    }
+    
+    
+    private void shootBossEvery1s() {
+    	timer2 = new Timer();
+		timer2.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+            	if (aliens.isEmpty()) return;
+            	aliens.get(0).shoot();
+            }
+        }, 0, 1000);
     }
     
     public void reduceFinalBossLife() {

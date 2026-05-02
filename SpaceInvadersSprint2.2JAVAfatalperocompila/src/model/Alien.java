@@ -72,15 +72,19 @@ public abstract class Alien {
     
     public void shoot() {
 		Square centre = this.squares.getCenterSquare();
-		ShotStrategy shot = new PixelStrategy();
-		Shot newShot = new Shot(shot, centre.getPosX(), centre.getPosY()+3);
-		newShot.startMoving("down");
-		shots.add(newShot);
+		if (centre.getPosX() < Board.getMyBoard().getWidth() && centre.getPosY()+3 < Board.getMyBoard().getHeight()) {
+			ShotStrategy shot = new PixelStrategy();
+			Shot newShot = new Shot(shot, centre.getPosX(), centre.getPosY()+3);
+			newShot.startMoving("down");
+			shots.add(newShot);
+		}
     }
 
 	protected abstract void reduceLife();
 
 	protected abstract Integer getRemainingLife();
+
+	protected abstract void move(int x, int y);
     
     
     

@@ -62,10 +62,12 @@ public abstract class AbstractPlayer{
     	{
     		ShotStrategy newShotStrategy = strategyList.get(strategyIndex);
     		Square centre = this.squares.getCenterSquare();
-    		Shot newShot = new Shot(newShotStrategy, centre.getPosX(), centre.getPosY()-2);
-    		newShot.startMoving("up");
-    		this.shots.add(newShot);
-    		this.consumeShot();
+    		if (centre.getPosX() < Board.getMyBoard().getWidth() && centre.getPosY()+3 < Board.getMyBoard().getHeight()) {
+    			Shot newShot = new Shot(newShotStrategy, centre.getPosX(), centre.getPosY()-2);
+    			newShot.startMoving("up");
+    			this.shots.add(newShot);
+    			this.consumeShot();
+    		}
     	}
     }
       
