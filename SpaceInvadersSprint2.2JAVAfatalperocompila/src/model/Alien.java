@@ -32,27 +32,7 @@ public abstract class Alien {
         }
     }
     
-    protected SquareComposite makeShape(int x, int y) {
-        SquareComposite c = new SquareComposite();
-        AlienState s = new AlienState();
-        c.add(new Square(x - 2, y - 2, s));
-        c.add(new Square(x - 1, y - 1, s));
-        c.add(new Square(x + 1, y - 1, s));
-        c.add(new Square(x + 2, y - 2, s));
-        c.add(new Square(x - 2, y,     s));
-        //c.add(new Square(x - 1, y,     s));
-        c.add(new Square(x,     y,     s));
-        //c.add(new Square(x + 1, y,     s));
-        c.add(new Square(x + 2, y,     s));
-        c.add(new Square(x - 2, y + 1, s));
-        c.add(new Square(x - 1, y + 1, s));		//para que no se solapen con noOverlap(), se hace esta forma
-        c.add(new Square(x - 1, y + 2, s));
-        c.add(new Square(x,     y + 1, s));		//se a�aden
-        c.add(new Square(x + 1, y + 1, s));		//estas 3 casillas
-        c.add(new Square(x + 2, y + 1, s));
-        c.add(new Square(x + 1, y + 2, s));
-        return c;
-    }
+    protected abstract SquareComposite makeShape(int x, int y);
    
     protected void moveDown() {
     	squares.move(0, 1);
@@ -63,9 +43,11 @@ public abstract class Alien {
     protected void turnSquaresToEmpty() {
     	this.squares.turnEmpty();		
     }
-    protected void destroy() {
+    
+    /*protected void destroy() {
         squares.getSquares().clear();
-    }
+    }*/
+    public abstract void destroy();
 
     protected int getBottomY() {
         int maxY = 0;
@@ -95,6 +77,10 @@ public abstract class Alien {
 		newShot.startMoving("down");
 		shots.add(newShot);
     }
+
+	protected abstract void reduceLife();
+
+	protected abstract Integer getRemainingLife();
     
     
     

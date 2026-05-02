@@ -131,12 +131,18 @@ public class AlienGroup{
         Alien a = getAlienAt(x, y);
         if (a == null) return;
         // Eliminar por completo el composite del alien
-        a.destroy();
-        aliens.remove(a);
-        boolean win = aliens.isEmpty();
-        if (win) {
-            stopTimer();
-            Board.getMyBoard().gameWon();
+        else if (a instanceof FinalBoss) {
+        	a.destroy();
+        	if (a.getRemainingLife() <= 0) {
+            	stopTimer();
+            	Board.getMyBoard().gameWon();
+        	}
+        }
+        else {
+        	a.destroy();
+        	aliens.remove(a);
+        	if (aliens.isEmpty())
+        	{ this.generateFinalBoss(); }
         }
     }
 
@@ -144,10 +150,22 @@ public class AlienGroup{
         if (!aliens.isEmpty()) {
             System.out.println("No se puede generar el Final Boss mientras queden aliens normales.");
             return;
-        } 
-        FinalBoss finalBoss = new FinalBoss(50, 5);
+        }
+        int x = random.nextInt(79) + 10;
+        int y = 8;
+        FinalBoss finalBoss = new FinalBoss(x, y);
         finalBoss.changeSquaresState();
         aliens.add(finalBoss);
         shootEvery2s();
-}
+    }
+    
+    public void reduceFinalBossLife() {
+    	//if (this.aliens.get(0) instanceof FinalBoss) {
+    		this.aliens.get(0).reduceLife();
+    	//}
+    }
+    
+    public int getFinalBossRemainingLife() {
+    	return this.aliens.get(0).getRemainingLife();
+    }
 }

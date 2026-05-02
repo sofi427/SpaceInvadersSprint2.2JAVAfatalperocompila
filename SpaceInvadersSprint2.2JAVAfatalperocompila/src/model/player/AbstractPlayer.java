@@ -136,5 +136,13 @@ public abstract class AbstractPlayer{
     public ShotStrategy getCurrentStrategy() { return currentStrategy; }
     public SquareComposite getSquares() { return squares; }
 
+	public int getRemainingShots(){
+		return this.currentStrategy.getRemainingShots();
+	}
+
+	public String getShotType() {
+		return this.currentStrategy.getName();
+	}
+
 	
 }
