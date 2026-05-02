@@ -3,7 +3,9 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -12,6 +14,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,41 +34,58 @@ public class GameScreen extends JFrame implements Observer {
     private JPanel     matrixPanel;
     private JLabel     statusLabel;
     private JLabel[][] pixelMatrix;
+    // Guardamos el ultimo estado pintado para detectar cambios
+    private int[][]    lastMatrix = new int[60][100];
     private GameController gController;
+    private Clip musicClip; //musica del juego
 
 
     public GameScreen() {
         pixelMatrix = new JLabel[60][100];
         setTitle("Space Invaders");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        contentPane = new JPanel(new BorderLayout());
-        contentPane.setBackground(Color.BLACK);
+
+        Image bgImage = new ImageIcon(
+            getClass().getClassLoader().getResource("img/FondoJuego.png")
+        ).getImage();
+
+        contentPane = new JPanel(new BorderLayout()) {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        contentPane.setOpaque(true);
         setContentPane(contentPane);
         contentPane.add(buildMatrixPanel(), BorderLayout.CENTER);
         contentPane.add(getStatusLabel(),   BorderLayout.SOUTH);
+
         gController = new GameController();
         addKeyListener(gController);
         setFocusable(true);
         addWindowListener(gController);
-        setSize(1000, 650); 
+        setSize(1000, 650);
         setLocationRelativeTo(null);
         requestFocusInWindow();
-        //Aniadimos observer a gamescreen
         Board.getMyBoard().addObserver(this);
+        startMusic();
     }
 
 
     private JPanel buildMatrixPanel() {
         matrixPanel = new JPanel(new GridLayout(60, 100, 0, 0));
-        matrixPanel.setBackground(Color.BLACK);
+        matrixPanel.setOpaque(false);
+        int[][] lastMatrix = new int[60][100]; // inicializar a -1 en buildMatrixPanel
 
         for (int row = 0; row < 60; row++) {
             for (int col = 0; col < 100; col++) {
                 JLabel lbl = new JLabel();
-                lbl.setOpaque(true);
-                lbl.setBackground(Color.BLACK);
+                lbl.setOpaque(false);
                 pixelMatrix[row][col] = lbl;
                 matrixPanel.add(lbl);
+                lastMatrix[row][col] = -1; // fuerza pintar todas las celdas en el primer frame
             }
         }
         return matrixPanel;
@@ -79,16 +103,12 @@ public class GameScreen extends JFrame implements Observer {
         return statusLabel;
     }
 
-  
 
-    
-    //El update reacciona segun lo que le notifique board, si llega una string sera del juego ganado o perdido, aparecera el mensaje que corresponda.
-    //Si llega una matriz de enteros sera porque board se ha terminado de actualizarse y la vista debe hacerlo tambien.
     public void update(Observable o, Object arg) {
         if (arg instanceof String) {
             String msg = (String) arg;
             if (msg.equals("WON")) {
-                showGameOverMessage("¡Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
+                showGameOverMessage("Has salvado a la humanidad! Premio o castigo?", Color.GREEN);
             } else if (msg.equals("LOST")) {
                 showGameOverMessage("Has perdido. La invasion ha comenzado. Corre", Color.RED);
             }
@@ -97,31 +117,44 @@ public class GameScreen extends JFrame implements Observer {
 
         if (arg instanceof int[][]) {
             int[][] matrix = (int[][]) arg;
-                refreshMatrix(matrix);
+            refreshMatrix(matrix);
         }
     }
-    
+
+
     private void refreshMatrix(int[][] matrix) {
         for (int row = 0; row < 60; row++) {
             for (int col = 0; col < 100; col++) {
-            	if (matrix[row][col]==1) {pixelMatrix[row][col].setBackground(AbstractPlayer.getPlayer().getColor());}
-            	else if (matrix[row][col]==2) {pixelMatrix[row][col].setBackground(Color.MAGENTA);}
-				else if (matrix[row][col]==3) {pixelMatrix[row][col].setBackground(Color.YELLOW);}
-				else {pixelMatrix[row][col].setBackground(Color.BLACK);}
+                int val = matrix[row][col];
+                if (val == lastMatrix[row][col]) continue;
+                lastMatrix[row][col] = val;
+
+                if (val == 1) {
+                    pixelMatrix[row][col].setOpaque(true);
+                    pixelMatrix[row][col].setBackground(AbstractPlayer.getPlayer().getColor());
+                } else if (val == 2) {
+                    pixelMatrix[row][col].setOpaque(true);
+                    pixelMatrix[row][col].setBackground(Color.MAGENTA);
+                } else if (val == 3) {
+                    pixelMatrix[row][col].setOpaque(true);
+                    pixelMatrix[row][col].setBackground(Color.YELLOW);
+                } else {
+                    pixelMatrix[row][col].setOpaque(false);
+                    pixelMatrix[row][col].setBackground(null);
+                    pixelMatrix[row][col].repaint();
+                }
             }
         }
     }
 
-    //Tratar los mensajes de ganar o perder el juego
     private void showGameOverMessage(String msg, Color color) {
-            JOptionPane.showMessageDialog(this, msg, "Game Over", JOptionPane.INFORMATION_MESSAGE);
-            Board.getMyBoard().deleteObserver(this);
-            Board.getMyBoard().StopGame();
-            dispose();
-            //Volvemos a abrir startscreen por si el usu quiere volver a jugar
-            StartScreen start = new StartScreen();
-            start.setVisible(true);
-       
+        JOptionPane.showMessageDialog(this, msg, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        Board.getMyBoard().deleteObserver(this);
+        Board.getMyBoard().StopGame();
+        dispose();
+        stopMusic();
+        StartScreen start = new StartScreen();
+        start.setVisible(true);
     }
 
     public void colorOnePixel(int row, int col, Color color) {
@@ -130,8 +163,7 @@ public class GameScreen extends JFrame implements Observer {
         }
     }
 
-
-    //Controller
+    //controller
     private class GameController implements KeyListener, WindowListener, ActionListener {
 
         private GameController() {}
@@ -142,23 +174,23 @@ public class GameScreen extends JFrame implements Observer {
             if (key == KeyEvent.VK_A) {
                 Board.getMyBoard().movePlayerLeft();
             } else if (key == KeyEvent.VK_D) {
-            	Board.getMyBoard().movePlayerRight();
+                Board.getMyBoard().movePlayerRight();
             } else if (key == KeyEvent.VK_W) {
-            	Board.getMyBoard().movePlayerUp();
+                Board.getMyBoard().movePlayerUp();
             } else if (key == KeyEvent.VK_S) {
-            	Board.getMyBoard().movePlayerDown();
+                Board.getMyBoard().movePlayerDown();
             } else if (key == KeyEvent.VK_SPACE) {
-            	Board.getMyBoard().shoot();
+                Board.getMyBoard().shoot();
             } else if (key == KeyEvent.VK_M) {
-            	Board.getMyBoard().changePlayerStrategy();             
-            	}
+                Board.getMyBoard().changePlayerStrategy();
+            }
         }
 
         @Override public void keyTyped(KeyEvent e) {}
         @Override public void keyReleased(KeyEvent e) {}
 
         @Override
-        public void windowClosing(WindowEvent e) { Board.getMyBoard().StopGame(); } //Si se cierra la ventana se para el juego
+        public void windowClosing(WindowEvent e) { Board.getMyBoard().StopGame(); }
         @Override public void windowOpened(WindowEvent e)      {}
         @Override public void windowClosed(WindowEvent e)      {}
         @Override public void windowIconified(WindowEvent e)   {}
@@ -167,4 +199,29 @@ public class GameScreen extends JFrame implements Observer {
         @Override public void windowDeactivated(WindowEvent e) {}
         @Override public void actionPerformed(ActionEvent e)   {}
     }
+
+
+    //Empezar musica del juego
+    private void startMusic() {
+    	try {
+        AudioInputStream audio = AudioSystem.getAudioInputStream(
+            getClass().getClassLoader().getResource("img/musica.wav")
+        );
+        musicClip = AudioSystem.getClip();
+        musicClip.open(audio);
+        musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+        musicClip.start();
+    	} catch (Exception e) {
+        e.printStackTrace();
+    	}
+    }
+    
+ 	//Parar musica del juego
+    private void stopMusic() {
+    	if (musicClip != null && musicClip.isRunning()) {
+        musicClip.stop();
+        musicClip.close();
+    	}
+    }
+
 }

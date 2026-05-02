@@ -24,6 +24,7 @@ public class PlayerState implements SquareState {
     public String collideWith(SquareState other) {
         if (other.getStateS().equalsIgnoreCase("Empty")) {return "move";}
         if (other.getStateS().equalsIgnoreCase("ALIEN")) {Board.getMyBoard().gameLost();}
+        if (other.getStateS().equalsIgnoreCase("SHOT")) {Board.getMyBoard().gameLost();}
         return "notmove";
     }
 }
