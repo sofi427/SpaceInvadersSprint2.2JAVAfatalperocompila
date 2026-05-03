@@ -72,7 +72,7 @@ public class AlienGroup{
 		timer2.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-              	int shootingAliens = random.nextInt(3);
+              	int shootingAliens = random.nextInt(4);
             	for (int i=0; i<shootingAliens;i++) {
                 	int x = random.nextInt(aliens.size());
                 	aliens.get(x).shoot();

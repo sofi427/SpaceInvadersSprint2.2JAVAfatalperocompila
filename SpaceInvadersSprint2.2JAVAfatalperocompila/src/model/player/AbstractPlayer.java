@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public abstract class AbstractPlayer{
 
 	//atributos
-    private static AbstractPlayer instance=null;
+    private static AbstractPlayer instance;
 
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
@@ -34,7 +34,8 @@ public abstract class AbstractPlayer{
         this.shots = new ArrayList<Shot>();
     }
 
-    public static AbstractPlayer getPlayer() { return instance; } //si que es static sofinu
+    public static AbstractPlayer getPlayer() { 
+    	return instance; } //si que es static sofinu
     public abstract Color getColor();
     protected abstract SquareComposite makeShape(int x, int y);
     protected abstract ArrayList<ShotStrategy> createStrategyList();
@@ -99,6 +100,9 @@ public abstract class AbstractPlayer{
        }
        shots.clear();
    }
+   
+   public abstract void clearPlayer();
+   
 
  //Para registrar las casillas de player en board
     public void registerOnBoard() {

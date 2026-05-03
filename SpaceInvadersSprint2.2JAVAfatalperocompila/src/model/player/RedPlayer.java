@@ -60,4 +60,9 @@ public class RedPlayer extends AbstractPlayer {
     public String getType() {
     	return "Red";
     }
+    
+    @Override
+    public void clearPlayer() {
+    	RedPlayer.myRedPlayer=null;
+    }
 }

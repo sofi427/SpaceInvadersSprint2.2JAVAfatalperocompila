@@ -57,4 +57,9 @@ public class BluePlayer extends AbstractPlayer {
     public String getType() {
     	return "Blue";
     }
+
+	@Override
+	public void clearPlayer() {
+		BluePlayer.myBluePlayer=null;
+	}
 }

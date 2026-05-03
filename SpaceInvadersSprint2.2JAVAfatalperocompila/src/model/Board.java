@@ -169,6 +169,7 @@ public class Board extends Observable {
         // Paramos y limpiamos los disparos activos del jugador.
         if (AbstractPlayer.getPlayer() != null) {
             AbstractPlayer.getPlayer().stopAllShots();
+            AbstractPlayer.getPlayer().clearPlayer();
         }
     }
 
