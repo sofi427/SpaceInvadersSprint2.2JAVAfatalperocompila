@@ -105,12 +105,20 @@ public class SquareComposite implements Component {
                 case "destroyboth" -> {
                     if (oldDestState instanceof AlienState) {
                             for (Alien a : AlienGroup.getAlienGroup().getAliens()) {
-                                if (a.containsSquare(dest.getPosX(), dest.getPosY())) {
-                                    for (Component c : new ArrayList<>(a.getSquareComposite().getSquares())) {
-                                        Square sq = (Square) c;
-                                        Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY()).changeState(new EmptyState());
+                                if(!a.isAFinalBoss()){
+                                        if (a.containsSquare(dest.getPosX(), dest.getPosY())) {
+                                        for (Component c : new ArrayList<>(a.getSquareComposite().getSquares())) {
+                                            Square sq = (Square) c;
+                                            Board.getMyBoard().getSquare(sq.getPosX(), sq.getPosY()).changeState(new EmptyState());
+                                        }
+                                    }
+                                } else {
+                                    a.reduceLife();
+                                    if(a.isItDead()){
+                                        System.out.println("Boss destruido");
                                     }
                                 }
+                                
                             }
                             AlienGroup.getAlienGroup().removeAlienAt(dest.getPosX(), dest.getPosY());
                     }

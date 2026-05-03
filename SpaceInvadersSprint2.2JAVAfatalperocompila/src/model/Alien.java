@@ -80,11 +80,17 @@ public abstract class Alien {
 		}
     }
 
-	protected abstract void reduceLife();
+	public abstract void reduceLife();
 
 	protected abstract Integer getRemainingLife();
 
 	protected abstract void move(int x, int y);
+
+    public abstract boolean isItDead();
+
+    public boolean isAFinalBoss() {
+        return false;
+    }
     
     
     

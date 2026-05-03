@@ -309,6 +309,7 @@ public class FinalBoss extends NormalAlien {
     	return this.life;
     }
     
+    @Override
     public boolean isItDead() {
     	return this.life <= 0;
     }
@@ -317,5 +318,10 @@ public class FinalBoss extends NormalAlien {
     	this.squares.move(x, y);
     	//this.centreX = centreX + x;
     	//this.centreY = centreY + y;
+    }
+
+    @Override
+    public boolean isAFinalBoss() {
+        return true;
     }
 }
