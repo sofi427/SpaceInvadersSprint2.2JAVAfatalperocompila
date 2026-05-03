@@ -34,7 +34,7 @@ public class GameScreen extends JFrame implements Observer {
     private JPanel     matrixPanel;
     private JLabel     statusLabel;
     private JLabel[][] pixelMatrix;
-    // Guardamos el ultimo estado pintado para detectar cambios
+    //guardamos el ultimo estado pintado para detectar cambios(asi va mas rapida la actualzn.)
     private int[][]    lastMatrix = new int[60][100];
     private GameController gController;
     private Clip musicClip; //musica del juego
@@ -145,6 +145,14 @@ public class GameScreen extends JFrame implements Observer {
                 }
             }
         }
+        int shots= Board.getMyBoard().getRemainingShots();
+        if (shots==-1) {
+            statusLabel.setText(" WASD: mover | ESPACIO: disparar | M: cambiar arma | Disparos restantes: Infinitos!" );
+
+        }
+        else {
+            statusLabel.setText(" WASD: mover | ESPACIO: disparar | M: cambiar arma | Disparos restantes: " + shots);
+        }
     }
 
     private void showGameOverMessage(String msg, Color color) {
@@ -155,12 +163,6 @@ public class GameScreen extends JFrame implements Observer {
         stopMusic();
         StartScreen start = new StartScreen();
         start.setVisible(true);
-    }
-
-    public void colorOnePixel(int row, int col, Color color) {
-        if (row >= 0 && row < 60 && col >= 0 && col < 100) {
-            pixelMatrix[row][col].setBackground(color);
-        }
     }
 
     //controller
