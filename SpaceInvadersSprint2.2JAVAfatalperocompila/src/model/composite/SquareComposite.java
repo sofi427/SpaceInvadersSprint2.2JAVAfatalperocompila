@@ -8,6 +8,7 @@ import model.Board;
 import model.player.AbstractPlayer;
 import model.state.AlienState;
 import model.state.EmptyState;
+import model.state.ShotState;
 import model.state.SquareState;
 
 
@@ -121,6 +122,8 @@ public class SquareComposite implements Component {
                                 
                             }
                             AlienGroup.getAlienGroup().removeAlienAt(dest.getPosX(), dest.getPosY());
+                    } else if (oldDestState instanceof ShotState) {
+                    	AlienGroup.getAlienGroup().removeShotAt(dest.getPosX(), dest.getPosY());
                     }
                     shotsToRemove.add(new int[]{dest.getPosX(), dest.getPosY()});
                  

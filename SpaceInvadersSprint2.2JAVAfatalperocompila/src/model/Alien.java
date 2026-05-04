@@ -60,8 +60,8 @@ public abstract class Alien {
         return maxY;
     }
 
-    public  boolean containsSquare(int x, int y) {
-        for (Component c : squares.getSquares()) {
+    public boolean containsSquare(int x, int y) {
+        for (Component c : new ArrayList<>(squares.getSquares())) {
             Square s = (Square) c;
             if (s.getPosX() == x && s.getPosY() == y) {
                 return true;
@@ -91,7 +91,22 @@ public abstract class Alien {
     public boolean isAFinalBoss() {
         return false;
     }
+
+	public void removeShotAt(int x, int y) {
+		Shot s = getShotAt(x, y);
+        if (s == null) return;
+        // Eliminar por completo el composite del shot
+        s.destroyShot();
+        shots.remove(s);
+	}
     
-    
+	private Shot getShotAt(int x, int y) {
+        for (Shot s : new ArrayList<>(shots)) {
+            if (s.containsSquare(x, y)) {
+                return s;
+            }
+        }
+        return null;
+    }
     
 }

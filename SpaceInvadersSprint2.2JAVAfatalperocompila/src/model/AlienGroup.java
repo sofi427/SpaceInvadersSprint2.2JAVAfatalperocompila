@@ -222,4 +222,10 @@ public class AlienGroup{
     public int getFinalBossRemainingLife() {
     	return this.aliens.get(0).getRemainingLife();
     }
+    
+    public void removeShotAt(int x, int y) {
+        for (Alien alien : aliens) {
+            alien.removeShotAt(x, y);
+        }
+    }
 }
