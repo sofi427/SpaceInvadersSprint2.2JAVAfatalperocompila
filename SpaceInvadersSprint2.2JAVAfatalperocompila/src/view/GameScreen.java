@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -18,6 +19,8 @@ import java.util.Observer;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,6 +41,9 @@ public class GameScreen extends JFrame implements Observer {
     private int[][]    lastMatrix = new int[60][100];
     private GameController gController;
     private Clip musicClip; //musica del juego
+    //barra de vida del FinalBoss
+    private BossHealthBar bossHealthBar;
+    private JPanel       bottomPanel;
 
 
     public GameScreen() {
@@ -60,7 +66,7 @@ public class GameScreen extends JFrame implements Observer {
         contentPane.setOpaque(true);
         setContentPane(contentPane);
         contentPane.add(buildMatrixPanel(), BorderLayout.CENTER);
-        contentPane.add(getStatusLabel(),   BorderLayout.SOUTH);
+        contentPane.add(buildBottomPanel(), BorderLayout.SOUTH);
 
         gController = new GameController();
         addKeyListener(gController);
@@ -78,7 +84,6 @@ public class GameScreen extends JFrame implements Observer {
         matrixPanel = new JPanel(new GridLayout(60, 100, 0, 0));
         matrixPanel.setOpaque(false);
         int[][] lastMatrix = new int[60][100]; // inicializar a -1 en buildMatrixPanel
-
         for (int row = 0; row < 60; row++) {
             for (int col = 0; col < 100; col++) {
                 JLabel lbl = new JLabel();
@@ -89,6 +94,18 @@ public class GameScreen extends JFrame implements Observer {
             }
         }
         return matrixPanel;
+    }
+
+    //Panel inferior donde esta la barra de vida del boss (oculta) + statusLabel
+    private JPanel buildBottomPanel() {
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        bottomPanel.setOpaque(false);
+        bossHealthBar = new BossHealthBar();
+        bossHealthBar.setVisible(false); // oculta hasta que aparezca el boss
+        bottomPanel.add(bossHealthBar);
+        bottomPanel.add(getStatusLabel());
+        return bottomPanel;
     }
 
 
@@ -118,6 +135,7 @@ public class GameScreen extends JFrame implements Observer {
         if (arg instanceof int[][]) {
             int[][] matrix = (int[][]) arg;
             refreshMatrix(matrix);
+            refreshBossHealthBar();
         }
     }
 
@@ -152,6 +170,24 @@ public class GameScreen extends JFrame implements Observer {
         }
         else {
             statusLabel.setText(" WASD: mover | ESPACIO: disparar | M: cambiar arma | Disparos restantes: " + shots);
+        }
+    }
+
+    //Comprueba si el boss esta activo y actualiza la barra (la oculta si no lo esta)
+    private void refreshBossHealthBar() {
+        if (Board.getMyBoard().isFinalBossActive()) {
+            int life    = Board.getMyBoard().getFinalBossLife();
+            int maxLife = Board.getMyBoard().getFinalBossMaxLife();
+            bossHealthBar.setLife(life, maxLife);
+            if (!bossHealthBar.isVisible()) {
+                bossHealthBar.setVisible(true);
+                bottomPanel.revalidate();
+            }
+        } else {
+            if (bossHealthBar.isVisible()) {
+                bossHealthBar.setVisible(false);
+                bottomPanel.revalidate();
+            }
         }
     }
 
@@ -224,6 +260,90 @@ public class GameScreen extends JFrame implements Observer {
         musicClip.stop();
         musicClip.close();
     	}
+    }
+
+
+    //Barra de vida pixelada para el FinalBoss
+    private static class BossHealthBar extends JPanel {
+        private static final long serialVersionUID = 1L;
+        private int life    = 15;
+        private int maxLife = 15;
+        //configuracion visual
+        private static int bw   = 18; //ancho de cada bloque
+        private static int bh   = 14; //alto de cada bloque
+        private static int spacebl      = 2;  //separacion entre bloques
+        private static int spx    = 12; 
+        private static int sptop  = 18; //espacio para el texto "BOSS"
+        private static int spbot  = 6;
+
+        BossHealthBar() {
+            setOpaque(true);
+            setBackground(Color.BLACK);
+            setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+            //altura suficiente para texto y los bloques
+            int h = sptop + bh + spbot + 2;
+            setPreferredSize(new Dimension(0, h));
+        }
+
+        public void setLife(int life, int maxLife) {
+            if (life == this.life && maxLife == this.maxLife) return;
+            this.life    = Math.max(0, life);
+            this.maxLife = Math.max(1, maxLife);
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            int width  = getWidth();
+            
+            //Texto del hp boss
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Courier New", Font.BOLD, 12));
+            String label = "BOSS HP  " + life + " / " + maxLife;
+            g.drawString(label, spx, 14);
+            //Calculo de los bloques
+            int available = width - spx * 2;
+            int totalNeeded = maxLife * bw + (maxLife - 1) * spacebl;
+            int startX;
+            int cellW = bw;
+            if (totalNeeded > available) {
+                //si no cabe, reduce ancho de cada bloque proporcionalmente
+                cellW = Math.max(2, (available - (maxLife - 1) * spacebl) / maxLife);
+                totalNeeded = maxLife * cellW + (maxLife - 1) * spacebl;
+            }
+            startX = spx;
+            int y  = sptop;
+            //Color segun % de vida de mas a menos
+            float ratio = (float) life / (float) maxLife;
+            Color fillColor;
+            if (ratio > 0.66f)      fillColor = new Color(50, 220, 50);   //verde
+            else if (ratio > 0.33f) fillColor = new Color(255, 200, 0);   //amarillo
+            else                    fillColor = new Color(220, 40, 40);   //rojo
+            //Dibujar cada bloque
+            for (int i = 0; i < maxLife; i++) {
+                int bx = startX + i * (cellW + spacebl);
+                if (i < life) {
+                    //bloque relleno
+                    g.setColor(fillColor);
+                    g.fillRect(bx, y, cellW, bh);
+                    //borde mas claro arriba/izda para efecto pixel
+                    g.setColor(fillColor.brighter());
+                    g.drawLine(bx, y, bx + cellW - 1, y);
+                    g.drawLine(bx, y, bx, y + bh - 1);
+                    //borde oscuro abajo/dcha
+                    g.setColor(fillColor.darker());
+                    g.drawLine(bx, y + bh - 1, bx + cellW - 1, y + bh - 1);
+                    g.drawLine(bx + cellW - 1, y, bx + cellW - 1, y + bh - 1);
+                } else {
+                    //bloque vacio: marco gris oscuro
+                    g.setColor(new Color(40, 40, 40));
+                    g.fillRect(bx, y, cellW, bh);
+                    g.setColor(new Color(80, 80, 80));
+                    g.drawRect(bx, y, cellW - 1, bh - 1);
+                }
+            }
+        }
     }
 
 }

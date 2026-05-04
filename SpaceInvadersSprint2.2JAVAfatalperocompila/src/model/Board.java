@@ -202,4 +202,23 @@ public class Board extends Observable {
         return AbstractPlayer.getPlayer().getShotType();
     }
     
+    
+    //Getters que necesito para la barra de vida del final boss
+    public boolean isFinalBossActive() {
+        for (model.Alien a : AlienGroup.getAlienGroup().getAliens()) {
+            if (a.isAFinalBoss() && !a.isItDead()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getFinalBossLife() {
+        return AlienGroup.getAlienGroup().getFinalBossRemainingLife();
+    }
+
+    public int getFinalBossMaxLife() {
+        return 15; // vida inicial del FinalBoss
+    }
+    
 }
