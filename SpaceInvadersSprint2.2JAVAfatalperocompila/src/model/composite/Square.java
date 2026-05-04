@@ -23,11 +23,11 @@ public class Square implements Component {
     }
     
     //Metodos necesarios para otras clases (cambiar estado de la casilla, get la posicion, saber el estado mediante una string...)
-    public SquareState getState() { return state; }
-    public void changeState(Object state) { this.state = (SquareState) state; }
+    public synchronized SquareState getState() { return state; }
+    public synchronized void changeState(Object state) { this.state = (SquareState) state; }
     public int getPosX() { return posX; }
     public int getPosY() { return posY; }
-    public String getStateString() { return this.state.getStateS();}
+    public synchronized String getStateString() { return this.state.getStateS();}
     
     //Metodos necesarios para el movimiento
     public ArrayList<Square> getSquares() {

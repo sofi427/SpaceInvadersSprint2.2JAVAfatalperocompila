@@ -32,7 +32,7 @@ public class SquareComposite implements Component {
 
     
     @Override
-    public void move(int dx, int dy) {
+    public synchronized void move(int dx, int dy) {
         
 
         ArrayList<Component> current = new ArrayList<>(this.children);

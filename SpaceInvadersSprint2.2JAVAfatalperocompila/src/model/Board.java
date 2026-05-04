@@ -92,11 +92,6 @@ public class Board extends Observable {
     	if (gameLost || gameWon) {
             return;
         }
-    	 // Verificar victoria si no hay aliens en aliengroup
-        if (AlienGroup.getAlienGroup().isEmpty()) {
-            gameWon();
-            return;
-        }
         int[][] matrix = new int[WIDTH][LENGTH];
         for (int row = 0; row < WIDTH; row++) {
             for (int col = 0; col < LENGTH; col++) {

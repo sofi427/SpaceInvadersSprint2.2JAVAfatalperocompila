@@ -288,7 +288,7 @@ public class FinalBoss extends NormalAlien {
 
     public void destroy() {
     	if (this.life<=0) {
-    		squares.getSquares().clear();
+    		squares.destroy();
     	}
     }
 
