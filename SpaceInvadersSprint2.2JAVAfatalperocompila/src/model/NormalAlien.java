@@ -61,7 +61,7 @@ public class NormalAlien extends Alien {
     }
 
 	@Override
-	protected void reduceLife() {
+	public void reduceLife() {
 	}
 
 	@Override
@@ -71,6 +71,11 @@ public class NormalAlien extends Alien {
 
 	@Override
 	protected void move(int x, int y) {
+	}
+
+	@Override
+	public boolean isItDead() {
+		return false;	//mientras el alien siga en la lista, esta vivo
 	}
 }
 
