@@ -115,9 +115,6 @@ public class SquareComposite implements Component {
                                     }
                                 } else {
                                     a.reduceLife();
-                                    if(a.isItDead()){
-                                        System.out.println("Boss destruido");
-                                    }
                                 }
                                 
                             }
@@ -152,13 +149,7 @@ public class SquareComposite implements Component {
     }
 
     private boolean isInCurrentByPosition(ArrayList<Component> current, Square dest) {
-        for (Component c : current) {
-            Square s = (Square) c;
-            if (s.getPosX() == dest.getPosX() && s.getPosY() == dest.getPosY()) {
-                return true;
-            }
-        }
-        return false;
+      return current.stream().anyMatch(component -> (((Square)component).getPosX() == dest.getPosX() && ((Square)component).getPosY() == dest.getPosY()));
 }
 
 
@@ -188,11 +179,9 @@ public class SquareComposite implements Component {
     }
 
     public void turnEmpty() {
-        for (Component c : children) {
-            Square s = (Square) c;
-            s.changeState(new EmptyState());
-        }
+    	children.stream().forEach(component -> ((Square)component).changeState(new EmptyState()));
     }
+    
     public void destroy() {
         turnEmpty();
         children.clear();

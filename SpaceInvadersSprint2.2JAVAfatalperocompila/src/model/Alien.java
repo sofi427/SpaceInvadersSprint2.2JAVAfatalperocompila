@@ -20,8 +20,10 @@ public abstract class Alien {
     protected void changeSquaresState() {
         // Tomamos copia de los hijos actuales (new Squares con posici�n)
         ArrayList<Component> original = new ArrayList<>(squares.getSquares());
+       
         // Vaciamos el composite
-        for (Component c : original) squares.remove(c);
+        original.stream().forEach(Component -> squares.remove(Component)); // for (Component c : original) squares.remove(c);
+        
         // Sustituimos por las casillas reales del board y las ponemos a AlienState
         AlienState s = new AlienState();
         for (Component c : original) {
@@ -50,24 +52,11 @@ public abstract class Alien {
     public abstract void destroy();
 
     protected int getBottomY() {
-        int maxY = 0;
-        for (Component squ : squares.getSquares()) {
-        	Square sq = (Square) squ;
-            if (sq.getPosY() > maxY) {
-                maxY = sq.getPosY();
-            }
-        }
-        return maxY;
+    	return squares.getSquares().stream().mapToInt(component -> ((Square) component).getPosY()).max().orElse(0);
     }
 
     public boolean containsSquare(int x, int y) {
-        for (Component c : new ArrayList<>(squares.getSquares())) {
-            Square s = (Square) c;
-            if (s.getPosX() == x && s.getPosY() == y) {
-                return true;
-            }
-        }
-        return false;
+    	return squares.getSquares().stream().anyMatch(Component -> (((Square)Component).getPosX()==x && ((Square)Component).getPosY()==y));
     }
     
     public void shoot() {

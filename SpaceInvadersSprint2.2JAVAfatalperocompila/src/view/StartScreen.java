@@ -1,8 +1,6 @@
 package view;
 
 import model.Board;
-import model.player.PlayerGenerator;
-
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;

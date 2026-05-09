@@ -55,9 +55,7 @@ public class AlienGroup{
 		timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-            	for (Alien a: new ArrayList<>(aliens)) {
-                    a.moveDown();
-                }
+            	aliens.stream().forEach(Alien -> Alien.moveDown());
                 // Verificar si algun alien llego al fondo
                 if (hasReachedBottom()) {
 	            	stopTimer(); // Detener el timer antes de notificar
@@ -115,10 +113,7 @@ public class AlienGroup{
     
 
     public boolean hasReachedBottom() {
-        for (Alien a : new ArrayList<>(aliens)) {
-            if (a.getBottomY() >= 60 - 1) return true;
-        }
-        return false;
+    	return aliens.stream().anyMatch(Alien -> Alien.getBottomY()>=60-1);
     }
 
     
@@ -224,8 +219,6 @@ public class AlienGroup{
     }
     
     public void removeShotAt(int x, int y) {
-        for (Alien alien : aliens) {
-            alien.removeShotAt(x, y);
-        }
+    	aliens.stream().forEach(Alien -> Alien.removeShotAt(x, y));
     }
 }

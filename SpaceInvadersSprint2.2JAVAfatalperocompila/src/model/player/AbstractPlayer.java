@@ -128,7 +128,7 @@ public abstract class AbstractPlayer{
         shots.remove(s);
     }
 
-    private Shot getShotAt(int x, int y) {
+    private Shot getShotAt(int x, int y) {    	
         for (Shot s : new ArrayList<>(shots)) {
             if (s.containsSquare(x, y)) {
                 return s;

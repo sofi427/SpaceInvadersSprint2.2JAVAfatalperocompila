@@ -18,13 +18,8 @@ public class Board extends Observable {
     private boolean gameLost;
     private boolean gameWon;
 
-
-
     // Metodos de patron Singleton
-    private Board() {
-
-	}
-
+    private Board() {}
     
     public static Board getMyBoard() {
 		if (myBoard == null)
@@ -200,12 +195,7 @@ public class Board extends Observable {
     
     //Getters que necesito para la barra de vida del final boss
     public boolean isFinalBossActive() {
-        for (model.Alien a : AlienGroup.getAlienGroup().getAliens()) {
-            if (a.isAFinalBoss() && !a.isItDead()) {
-                return true;
-            }
-        }
-        return false;
+    	return AlienGroup.getAlienGroup().getAliens().stream().anyMatch(Alien -> (Alien.isAFinalBoss() && !Alien.isItDead()));       
     }
 
     public int getFinalBossLife() {
