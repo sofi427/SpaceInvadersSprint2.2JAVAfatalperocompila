@@ -31,7 +31,4 @@ public class PixelStrategy implements ShotStrategy {
     @Override
     public void consumeShot(){}		// no consume disparos
     
-    
-    
-    
 }

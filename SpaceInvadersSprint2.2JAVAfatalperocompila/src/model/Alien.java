@@ -10,15 +10,15 @@ import model.strategy.ShotStrategy;
 
 public abstract class Alien {
 
-    protected SquareComposite squares;
-    protected ArrayList<Shot> shots = new ArrayList<Shot>();
+    private SquareComposite squares;
+    private ArrayList<Shot> shots = new ArrayList<Shot>();
 
     protected Alien(int centerX, int centerY) {
         this.squares = makeShape(centerX, centerY);
     }
 
     protected void changeSquaresState() {
-        // Tomamos copia de los hijos actuales (new Squares con posici�n)
+        // Tomamos copia de los hijos actuales (new Squares con posicion)
         ArrayList<Component> original = new ArrayList<>(squares.getSquares());
        
         // Vaciamos el composite
@@ -41,14 +41,15 @@ public abstract class Alien {
 	}
     
     public SquareComposite getSquareComposite() { return squares; }
+
+    protected ArrayList<Shot> getShots() {
+        return shots;
+    }
     
     protected void turnSquaresToEmpty() {
     	this.squares.turnEmpty();		
     }
     
-    /*protected void destroy() {
-        squares.getSquares().clear();
-    }*/
     public abstract void destroy();
 
     protected int getBottomY() {

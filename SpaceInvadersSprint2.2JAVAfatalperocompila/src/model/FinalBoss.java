@@ -8,14 +8,10 @@ import model.strategy.ShotStrategy;
 
 public class FinalBoss extends NormalAlien {
 
-	//private int centreX;
-	//private int centreY;
 	private int life = 15;
 	
     public FinalBoss(int centerX, int centerY) {
         super(centerX, centerY);
-        //this.centreX=centerX;
-        //this.centreY=centerY;
     }
    
     @Override
@@ -259,14 +255,12 @@ public class FinalBoss extends NormalAlien {
     
     @Override
     public synchronized void shoot() {
-		Square centre = this.squares.getCenterSquare();
-    	//if (this.centreX < Board.getMyBoard().getWidth() && this.centreY+16 < Board.getMyBoard().getHeight()) {
+		Square centre = this.getSquareComposite().getCenterSquare();
     	if (centre.getPosX() < Board.getMyBoard().getWidth() && centre.getPosY()+16 < Board.getMyBoard().getHeight()) {
     		ShotStrategy shot = new DiamondStrategy();
-    		//Shot newShot = new Shot(shot, this.centreX, this.centreY+16);
     		Shot newShot = new Shot(shot, centre.getPosX(), centre.getPosY()+16);
     		newShot.startMoving("down");
-    		shots.add(newShot);
+    		getShots().add(newShot);
     	}
     }
     
@@ -288,7 +282,7 @@ public class FinalBoss extends NormalAlien {
 
     public void destroy() {
     	if (this.life<=0) {
-    		squares.destroy();
+    		getSquareComposite().destroy();
     	}
     }
 
@@ -313,10 +307,8 @@ public class FinalBoss extends NormalAlien {
     	return this.life <= 0;
     }
     
-    public synchronized void move(int x, int y) {
-    	this.squares.move(x, y);
-    	//this.centreX = centreX + x;
-    	//this.centreY = centreY + y;
+    public void move(int x, int y) {
+    	this.getSquareComposite().move(x, y);
     }
 
     @Override

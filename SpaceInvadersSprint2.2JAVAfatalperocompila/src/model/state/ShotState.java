@@ -17,10 +17,19 @@ public class ShotState implements SquareState {
 
     @Override
     public String collideWith(SquareState other) {
-        if (other.getStateS().equalsIgnoreCase("Empty")) {return "move";}
-        if (other.getStateS().equalsIgnoreCase("ALIEN")) {return "destroyboth";}
-        if (other.getStateS().equalsIgnoreCase("PLAYER")) {Board.getMyBoard().gameLost();}
-        if (other.getStateS().equalsIgnoreCase("SHOT")) {return "destroyboth";}
+        String state = other.getStateS().toUpperCase();
+        switch (state) {
+            case "EMPTY":
+                return "move";
+            case "ALIEN":
+            	return "destroyboth";
+            case "SHOT":
+            	return "destroyboth";
+            case "PLAYER":
+                Board.getMyBoard().gameLost();
+                break;
+        }
+
         return "notmove";
     }
 }

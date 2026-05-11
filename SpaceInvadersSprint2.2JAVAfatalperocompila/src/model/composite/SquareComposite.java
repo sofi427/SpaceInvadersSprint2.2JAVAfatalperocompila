@@ -60,10 +60,10 @@ public class SquareComposite implements Component {
             Square dest = Board.getMyBoard().getSquare(nx, ny);
 
             SquareState origin = from.getState();
-            SquareState oldDestState = dest.getState(); // guardo lo que había ANTES
+            SquareState oldDestState = dest.getState(); // guardo lo que habia ANTES
 
             // Si el destino es una casilla del propio shot (otra parte del mismo composite),
-            // entonces para colisión lo tratamos como vacío (se va a vaciar en la fase 2)
+            // entonces para colision lo tratamos como vacio (se va a vaciar en la fase 2)
             SquareState effectiveTarget =
                     isInCurrentByPosition(current, dest) ? new EmptyState() : oldDestState;
 
@@ -84,7 +84,7 @@ public class SquareComposite implements Component {
             results.add(result);
         }
 
-        // ---------- FASE 2: vaciar orígenes ----------
+        // ---------- FASE 2: vaciar origenes ----------
         for (Component comp : current) {
             ((Square) comp).changeState(new EmptyState());
         }
@@ -99,11 +99,11 @@ public class SquareComposite implements Component {
 
             switch (result) {
 
-                case "move" -> {
+                case "move":
                     dest.changeState(origin);
-                }
+                    break;
 
-                case "destroyboth" -> {
+                case "destroyboth":
                     if (oldDestState instanceof AlienState) {
                             for (Alien a : AlienGroup.getAlienGroup().getAliens()) {
                                 if(!a.isAFinalBoss()){
@@ -123,21 +123,21 @@ public class SquareComposite implements Component {
                     	AlienGroup.getAlienGroup().removeShotAt(dest.getPosX(), dest.getPosY());
                     }
                     shotsToRemove.add(new int[]{dest.getPosX(), dest.getPosY()});
-                 
-                }
-                default -> { // Si aparece algo inesperado, por seguridad no hacemos nada. 
-                }
+                    break;
+                
+                default: // Si aparece algo inesperado, por seguridad no hacemos nada. 
+                	break;
            }
         }
             
-        // ---------- FASE 4: aqui se añade las casillas destino al composite de this ----------
+        // ---------- FASE 4: aqui se aniade las casillas destino al composite de this ----------
         this.children.clear();
         for (int i = 0; i < target.size(); i++) {
             if ("move".equals(results.get(i))) {
                 this.children.add(target.get(i)); // Square es Component
             }
         }
-     // ---------- FASE 5: destruir el shot si hubo colisión con alien (al final pq si no no se borra por algna razon)---------
+     // ---------- FASE 5: destruir el shot si hubo colision con alien (al final pq si no no se borra)---------
         if (!shotsToRemove.isEmpty()) {
             if (!this.children.isEmpty()) {
                 Square shotSq = (Square) this.children.get(0);
@@ -153,7 +153,7 @@ public class SquareComposite implements Component {
 }
 
 
-    public synchronized ArrayList<Component> getSquares() {
+    public ArrayList<Component> getSquares() {
         return children;
     }
 

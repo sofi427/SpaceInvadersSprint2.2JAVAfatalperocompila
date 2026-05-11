@@ -17,14 +17,12 @@ public abstract class AbstractPlayer{
 
     private SquareComposite squares;
     private ShotStrategy currentStrategy;
-    @SuppressWarnings("FieldMayBeFinal")
     private ArrayList<ShotStrategy> strategyList;
     private int strategyIndex;
-    @SuppressWarnings("FieldMayBeFinal")
     private ArrayList<Shot> shots;
 
     //constructora
-    @SuppressWarnings("Convert2Diamond")
+    //@SuppressWarnings("Convert2Diamond")
     protected AbstractPlayer(int centerX, int centerY) {
     	instance = this; 
         this.squares = makeShape(centerX, centerY);
@@ -35,7 +33,7 @@ public abstract class AbstractPlayer{
     }
 
     public static AbstractPlayer getPlayer() { 
-    	return instance; } //si que es static sofinu
+    	return instance; }
     public abstract Color getColor();
     protected abstract SquareComposite makeShape(int x, int y);
     protected abstract ArrayList<ShotStrategy> createStrategyList();
@@ -93,11 +91,7 @@ public abstract class AbstractPlayer{
     
     // aniadido para que Board.StopGame() pueda detener los timers de todos los disparos activos y limpiar sus casillas del board
    public void stopAllShots() {
-       for (Shot shot : shots) {
-           if (shot.isActive()) {
-               shot.destroyShot();
-           }
-       }
+       shots.stream().filter(shot->shot.isActive()).forEach(shot->shot.destroyShot());
        shots.clear();
    }
    
@@ -129,12 +123,9 @@ public abstract class AbstractPlayer{
     }
 
     private Shot getShotAt(int x, int y) {    	
-        for (Shot s : new ArrayList<>(shots)) {
-            if (s.containsSquare(x, y)) {
-                return s;
-            }
-        }
-        return null;
+        ArrayList<Shot> ArrayShots = new ArrayList<>(shots);
+        return ArrayShots.stream().filter(s->s.containsSquare(x, y)).findFirst().orElse(null);
+        //return null;
     }
 
     

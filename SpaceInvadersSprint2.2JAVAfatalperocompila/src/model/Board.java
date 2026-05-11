@@ -118,13 +118,13 @@ public class Board extends Observable {
         if (state == null) return 0;
         state = state.trim().toUpperCase();
 
-        return switch (state) {
-            case "EMPTY" -> 0;
-            case "PLAYER" -> 1;
-            case "ALIEN" -> 2;
-            case "SHOT" -> 3;
-            default -> 0;
-        };
+        switch (state) {
+        	case "EMPTY":  return 0;
+        	case "PLAYER": return 1;
+        	case "ALIEN":  return 2;
+        	case "SHOT":   return 3;
+        	default:       return 0;
+        }
     }
 
     public String getPlayerType(){

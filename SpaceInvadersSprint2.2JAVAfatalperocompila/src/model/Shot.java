@@ -11,7 +11,6 @@ import model.strategy.ShotStrategy;
 
 public class Shot {
     private ShotStrategy strategy;
-    @SuppressWarnings("FieldMayBeFinal")
     private SquareComposite squares;
     private Timer timer;
     private boolean active;

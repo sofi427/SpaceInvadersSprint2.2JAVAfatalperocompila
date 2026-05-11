@@ -13,6 +13,6 @@ public class EmptyState implements SquareState {
 
    @Override
    public String collideWith(SquareState other) {
-	return "move"; //por completar y que devuelva algo, una casilla vacia nunca se mueve}
+	return "move"; //por completar y que devuelva algo, una casilla vacia nunca se mueve
   }
 }

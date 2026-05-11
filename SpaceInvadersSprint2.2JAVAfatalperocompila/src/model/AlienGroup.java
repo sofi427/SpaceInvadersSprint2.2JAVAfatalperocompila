@@ -12,7 +12,6 @@ public class AlienGroup{
 
 	private static AlienGroup myAlienGroup=null;
     private ArrayList<Alien> aliens = new ArrayList<>();
-    @SuppressWarnings("FieldMayBeFinal")
     private Random random = new Random();
     private Timer timer;
     private Timer timer2;
@@ -209,9 +208,7 @@ public class AlienGroup{
     }
     
     public void reduceFinalBossLife() {
-    	//if (this.aliens.get(0) instanceof FinalBoss) {
     		this.aliens.get(0).reduceLife();
-    	//}
     }
     
     public int getFinalBossRemainingLife() {

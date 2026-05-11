@@ -49,7 +49,7 @@ public class NormalAlien extends Alien {
     }  
 
     public void destroy() {
-        squares.getSquares().clear();
+        getSquareComposite().getSquares().clear();
     }
 
     public int getBottomY() {
